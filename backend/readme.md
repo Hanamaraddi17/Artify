@@ -135,4 +135,4 @@ Server errors (e.g., database issues) return a 500 status.
 
 
 
-## Developed with 💻 and ☕ by [Reddy](https://github.com/Hanamaraddi17/).
+## Developed with 💻 and ☕ by [Reddy](https://github.com/Hanamaraddi17/) and [akshay]([https://.](https://github.com/AkahayKumarS)
