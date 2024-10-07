@@ -1,4 +1,4 @@
-# Artify Backend
+# Artify Backend 🎨🖌️
 
 This is the backend for the **Artify** platform, a system where users can upload and browse artworks. The backend provides RESTful API endpoints to handle user authentication, artwork uploads, and data retrieval. It is built with **Node.js**, **Express.js**, and **MySQL**, and it includes middleware for handling image uploads with **Multer**.
 
@@ -86,6 +86,7 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 ```
+To create orders table : 
 ```sql
 CREATE TABLE orders (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -104,7 +105,7 @@ Start the server by running:
 npm start
 The server should be running on http://localhost:5000.
 ```
-API Endpoints
+### API Endpoints 
 Authentication
 ```text
 POST /auth/signup - Sign up a new user
