@@ -86,6 +86,17 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 ```
+```sql
+CREATE TABLE orders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    buyer_id INT NOT NULL,
+    artwork_id INT NOT NULL,
+    order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    total_price DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (buyer_id) REFERENCES users(id),
+    FOREIGN KEY (artwork_id) REFERENCES artworks(id)
+);
+```
 ### 5. Run the Server
 Start the server by running:
 
@@ -103,6 +114,12 @@ Artworks
 ```text
 POST /artworks/uploadartwork - Upload new artwork (requires authentication)
 GET /artworks - Retrieve all artworks
+```
+
+Orders
+```text
+POST /orders/new-order
+GET /orders/myorders
 ```
 Middleware
 >
