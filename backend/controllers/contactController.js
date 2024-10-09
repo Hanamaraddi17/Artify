@@ -12,10 +12,10 @@ const adminPhoneNumber = process.env.ADMIN_PHONE_NUMBER || '+917204484843';
 
 // Function to handle contact form submission
 exports.submitContactForm = async (req, res) => {
-    const { name, email, message } = req.body;
+    const { name, email,subject, message } = req.body;
 
-    if (!name || !email || !message) {
-        console.error('Error: Missing fields in the submission:', { name, email, message });
+    if (!name || !email || !subject || !message) {
+        console.error('Error: Missing fields in the submission:', { name, email,subject, message });
         return res.status(400).json({ error: 'Please fill out all fields' });
     }
 
@@ -42,20 +42,20 @@ exports.submitContactForm = async (req, res) => {
         worksheet = workbook.getWorksheet('contact_us');
         if (!worksheet) {
             worksheet = workbook.addWorksheet('contact_us');
-            worksheet.addRow(['Name', 'Email', 'Message']);
+            worksheet.addRow(['Name', 'Email','subject', 'Message']);
         }
     } catch (error) {
         console.log('Excel file not found, creating a new file:', filePath);
         worksheet = workbook.addWorksheet('contact_us');
-        worksheet.addRow(['Name', 'Email', 'Message']);
+        worksheet.addRow(['Name', 'Email','subject', 'Message']);
     }
 
     // Log existing data
     console.log('Existing data before update, row count:', worksheet.rowCount);
 
     // Append the new contact data
-    worksheet.addRow([name, email, message]);
-    console.log('New contact added:', { name, email, message });
+    worksheet.addRow([name, email,subject, message]);
+    console.log('New contact added:', { name, email,subject, message });
 
     // Save the updated file
     try {
@@ -79,7 +79,7 @@ exports.submitContactForm = async (req, res) => {
     }
 
     // Send an SMS using Twilio
-    const smsMessage = `New contact form submission: Name: ${name}, Email: ${email}, Message: ${message}`;
+    const smsMessage = `New contact form submission: Name: ${name}, Email: ${email}, subject: ${subject}`;
     console.log('Sending SMS:', smsMessage);
 
     try {
