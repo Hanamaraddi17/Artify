@@ -78,7 +78,7 @@ const ContactPage = () => {
                   Location:
                 </h3>
                 <p className="text-gray-600">
-                  A108 Adam Street, New York, NY 535022
+                  St. Joseph Engineering College, Mangaluru
                 </p>
               </div>
             </div>
@@ -88,7 +88,7 @@ const ContactPage = () => {
               </IconWrapper>
               <div className="ml-4">
                 <h3 className="text-lg font-semibold text-gray-800">Email:</h3>
-                <p className="text-gray-600">info@example.com</p>
+                <p className="text-gray-600">akshaykumars9108@gmail.com</p>
               </div>
             </div>
             <div className="flex items-center mb-6">
@@ -97,7 +97,7 @@ const ContactPage = () => {
               </IconWrapper>
               <div className="ml-4">
                 <h3 className="text-lg font-semibold text-gray-800">Call:</h3>
-                <p className="text-gray-600">+1 5589 55488 55</p>
+                <p className="text-gray-600">+91 9108083054</p>
               </div>
             </div>
             <div className="h-64 bg-gray-300 rounded-sm shadow-md">
