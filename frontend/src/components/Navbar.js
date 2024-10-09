@@ -1,14 +1,14 @@
 import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
 import { ChevronDown, Menu, X } from "lucide-react";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [activeLink, setActiveLink] = useState("/");
 
-  const handleLinkClick = (link) => {
-    setActiveLink(link);
-  };
+  // Get the current path
+  const location = useLocation();
+  const currentPath = location.pathname;
 
   return (
     <nav className="bg-white shadow-lg sticky top-0 z-50">
@@ -37,27 +37,24 @@ const Navbar = () => {
           <a
             href="/"
             className={`${
-              activeLink === "/" ? "text-blue-500" : "text-gray-600"
+              currentPath === "/" ? "text-blue-500" : "text-gray-600"
             } hover:text-blue-500`}
-            onClick={() => handleLinkClick("/")}
           >
             Home
           </a>
           <a
             href="/gallery"
             className={`${
-              activeLink === "/gallery" ? "text-blue-500" : "text-gray-600"
+              currentPath === "/gallery" ? "text-blue-500" : "text-gray-600"
             } hover:text-blue-500`}
-            onClick={() => handleLinkClick("/gallery")}
           >
             Gallery
           </a>
           <a
             href="/artists"
             className={`${
-              activeLink === "/artists" ? "text-blue-500" : "text-gray-600"
+              currentPath === "/artists" ? "text-blue-500" : "text-gray-600"
             } hover:text-blue-500`}
-            onClick={() => handleLinkClick("/artists")}
           >
             Artists
           </a>
@@ -65,7 +62,9 @@ const Navbar = () => {
             <a
               href="#"
               className={`${
-                activeLink === "categories" ? "text-blue-500" : "text-gray-600"
+                currentPath.startsWith("/category")
+                  ? "text-blue-500"
+                  : "text-gray-600"
               } hover:text-blue-500 flex items-center`}
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             >
@@ -76,21 +75,18 @@ const Navbar = () => {
                 <a
                   href="/category/painting"
                   className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
-                  onClick={() => handleLinkClick("categories")}
                 >
                   Paintings
                 </a>
                 <a
                   href="/category/sculpture"
                   className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
-                  onClick={() => handleLinkClick("categories")}
                 >
                   Sculptures
                 </a>
                 <a
                   href="/category/photography"
                   className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
-                  onClick={() => handleLinkClick("categories")}
                 >
                   Photography
                 </a>
@@ -100,18 +96,16 @@ const Navbar = () => {
           <a
             href="/about"
             className={`${
-              activeLink === "/about" ? "text-blue-500" : "text-gray-600"
+              currentPath === "/about" ? "text-blue-500" : "text-gray-600"
             } hover:text-blue-500`}
-            onClick={() => handleLinkClick("/about")}
           >
             About Us
           </a>
           <a
             href="/contact"
             className={`${
-              activeLink === "/contact" ? "text-blue-500" : "text-gray-600"
+              currentPath === "/contact" ? "text-blue-500" : "text-gray-600"
             } hover:text-blue-500`}
-            onClick={() => handleLinkClick("/contact")}
           >
             Contact
           </a>

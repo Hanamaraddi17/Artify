@@ -98,6 +98,25 @@ CREATE TABLE orders (
     FOREIGN KEY (artwork_id) REFERENCES artworks(id)
 );
 ```
+#### while deleting the artwork From ARTWORKS TABLE, we will encouter the error for Foreign key constraint. </br>
+#### Solutions to Handle the Foreign Key Constraint
+1 Cascade Delete: This allows the deletion of the artwork and automatically deletes any associated rows in the orders table. This solution should be used carefully since it will remove both the artwork and the related orders.
+
+2 Prevent Artwork Deletion If Related Orders Exist: You can prevent deletion if the artwork has associated orders and instead return an error message.
+
+I'm using first method which will delete associated order from the ORDER TABLE 
+```sql
+ALTER TABLE orders
+DROP FOREIGN KEY orders_ibfk_2;
+
+ALTER TABLE orders
+ADD CONSTRAINT orders_ibfk_2
+FOREIGN KEY (artwork_id)
+REFERENCES artworks(id)
+ON DELETE CASCADE;
+```
+
+------------------------------------------------------------------------------------------
 ### 5. Run the Server
 Start the server by running:
 
@@ -106,20 +125,36 @@ npm start
 The server should be running on http://localhost:5000.
 ```
 ### API Endpoints 
-Authentication
+#### Authentication
+- Sign up a new user
 ```text
-POST /auth/signup - Sign up a new user
-POST /auth/login - Log in a user and receive a JWT token
+POST /auth/signup
 ```
-Artworks
+ - Log in a user and receive a JWT token
+```text 
+POST /auth/login
+```
+#### Artworks
+- Upload new artwork (requires authentication)
 ```text
-POST /artworks/uploadartwork - Upload new artwork (requires authentication)
-GET /artworks - Retrieve all artworks
+POST /artworks/uploadartwork 
+````
+ - Retrieve all artworks
+```text
+GET /artworks
+```
+- Delete an artwork by ID (requires authentication).
+```text
+DELETE /artworks/:id
 ```
 
-Orders
+#### Orders
+- create new order
 ```text
 POST /orders/new-order
+```
+- Retrieve myorders 
+```text
 GET /orders/myorders
 ```
 Middleware

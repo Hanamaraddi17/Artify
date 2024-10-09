@@ -1,5 +1,5 @@
 const express = require('express');
-const { createArtwork, getAllArtworks } = require('../controllers/artworkController');
+const { createArtwork, getAllArtworks, deleteArtwork } = require('../controllers/artworkController');
 const authMiddleware = require('../middleware/authMiddleware');
 const multer = require('multer');
 const path = require('path');
@@ -39,5 +39,6 @@ const router = express.Router();
 router.post('/uploadartwork', authMiddleware, upload.single('imageurl'), createArtwork);
 
 router.get('/', getAllArtworks);
+router.delete('/:id',authMiddleware, deleteArtwork);
 
 module.exports = router;
