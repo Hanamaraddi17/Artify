@@ -15,9 +15,13 @@ const Navbar = () => {
       <div className="px-4 py-1 flex justify-between items-center">
         <a
           href="/"
-          className="flex items-center text-2xl font-bold text-gray-800 "
+          className="flex items-center text-2xl font-bold text-blue-900"
         >
-          <img src="/images/logo.png" alt="Artify Logo" className="h-16 w-20" />
+          <img
+            src="/images/logo.png"
+            alt="Artify Logo"
+            className="h-16 w-20 mr-2"
+          />
           Artify
         </a>
         <div className="md:hidden">

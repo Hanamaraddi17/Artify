@@ -64,7 +64,7 @@ function AboutPage() {
         </div>
         <div className="lg:w-2/4 order-first lg:order-last">
           <img
-            src="/images/about.png"
+            src="/images/about2.png"
             alt="Artify Showcase"
             className="object-cover w-full h-auto animate-float"
           />
