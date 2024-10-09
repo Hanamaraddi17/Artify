@@ -1,24 +1,52 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+import HomePage from "./pages/HomePage";
+import AboutPage from "./pages/AboutPage";
+import ContactPage from "./pages/ContactPage";
+import { LoginComponent, SignupComponent } from "./pages/Register"; // Import Login and Signup
+
+// Create a layout with bg-blue-100 without altering the component sizes
+const AuthPage = ({ component: Component }) => {
+  return (
+    <div className="bg-blue-100 min-h-screen">
+      {" "}
+      {/* Full page background */}
+      <div className="container mx-auto py-4">
+        {" "}
+        {/* Ensures padding around the component */}
+        <Component /> {/* Render the Login/Signup component */}
+      </div>
+    </div>
+  );
+};
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div>
+        <Navbar />
+        <Routes>
+          <Route exact path="/" element={<HomePage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+
+          {/* Add Login route with AuthPage wrapper */}
+          <Route
+            path="/login"
+            element={<AuthPage component={LoginComponent} />}
+          />
+
+          {/* Add Signup route with AuthPage wrapper */}
+          <Route
+            path="/signup"
+            element={<AuthPage component={SignupComponent} />}
+          />
+        </Routes>
+        <Footer />
+      </div>
+    </Router>
   );
 }
 
