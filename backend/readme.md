@@ -8,7 +8,7 @@ This is the backend for the **Artify** platform, a system where users can upload
 - **Artwork Management**: Authenticated users can upload artwork with image, title, description, and price.
 - **Image Uploads**: Images are uploaded using Multer and stored in the `uploads/` directory.
 - **Database Integration**: Data is stored in MySQL, with tables for users and artworks.
-  
+
 ## Tech Stack
 
 - **Backend**: Node.js, Express.js
@@ -35,6 +35,7 @@ Clone this repository to your local machine:
 git clone https://github.com/Hanamaraddi17/Artify
 cd ./backend
 ```
+
 ### 2. Install Dependencies
 
 Install the required Node.js packages by running:
@@ -42,7 +43,9 @@ Install the required Node.js packages by running:
 ```bash
 npm install
 ```
+
 ### 3. Set up the Environment Variables
+
 Create a .env file in the root directory with the following content:
 
 ```bash
@@ -53,16 +56,20 @@ DB_PASSWORD=yourpassword
 DB_NAME=artify
 JWT_SECRET=yourjwtsecret
 ```
+
 ### 4. Set up the Database
+
 Create a MySQL database named artify:
 
 ```sql
   CREATE DATABASE artify;
   USE artify;
 ```
+
 Run the following SQL queries to create the required tables:
 
 To create artworks table :
+
 ```sql
 CREATE TABLE artworks (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -75,7 +82,9 @@ CREATE TABLE artworks (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 ```
-To create users table : 
+
+To create users table :
+
 ```sql
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -86,7 +95,9 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 ```
-To create orders table : 
+
+To create orders table :
+
 ```sql
 CREATE TABLE orders (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -98,13 +109,17 @@ CREATE TABLE orders (
     FOREIGN KEY (artwork_id) REFERENCES artworks(id)
 );
 ```
+
 #### while deleting the artwork From ARTWORKS TABLE, we will encouter the error for Foreign key constraint. </br>
+
 #### Solutions to Handle the Foreign Key Constraint
+
 1 Cascade Delete: This allows the deletion of the artwork and automatically deletes any associated rows in the orders table. This solution should be used carefully since it will remove both the artwork and the related orders.
 
 2 Prevent Artwork Deletion If Related Orders Exist: You can prevent deletion if the artwork has associated orders and instead return an error message.
 
-I'm using first method which will delete associated order from the ORDER TABLE 
+I'm using first method which will delete associated order from the ORDER TABLE
+
 ```sql
 ALTER TABLE orders
 DROP FOREIGN KEY orders_ibfk_2;
@@ -116,49 +131,71 @@ REFERENCES artworks(id)
 ON DELETE CASCADE;
 ```
 
-------------------------------------------------------------------------------------------
+---
+
 ### 5. Run the Server
+
 Start the server by running:
 
 ```bash
 npm start
 The server should be running on http://localhost:5000.
 ```
-### API Endpoints 
+
+### API Endpoints
+
 #### Authentication
+
 - Sign up a new user
+
 ```text
 POST /auth/signup
 ```
- - Log in a user and receive a JWT token
-```text 
+
+- Log in a user and receive a JWT token
+
+```text
 POST /auth/login
 ```
+
 #### Artworks
+
 - Upload new artwork (requires authentication)
+
 ```text
-POST /artworks/uploadartwork 
-````
- - Retrieve all artworks
+POST /artworks/uploadartwork
+```
+
+- Retrieve all artworks
+
 ```text
 GET /artworks
 ```
+
 - Delete an artwork by ID (requires authentication).
+
 ```text
 DELETE /artworks/:id
 ```
 
 #### Orders
+
 - create new order
+
 ```text
 POST /orders/new-order
 ```
-- Retrieve myorders 
+
+- Retrieve myorders
+
 ```text
 GET /orders/myorders
 ```
+
 Middleware
+
 >
+
 - **Multer**: Handles image uploads. Images are stored in the /uploads directory and are associated with artwork records in the database.
 - **Auth Middleware**: Protects routes to ensure that only authenticated users can upload artwork.
 - **File Upload Handling**: The platform uses Multer to handle file uploads. The images are stored in the /uploads/ folder, and filenames are automatically generated with unique identifiers to avoid conflicts. The path to the image is stored in the database.
@@ -166,6 +203,7 @@ Middleware
 ## Development Notes
 
 #### 1. Running in Development Mode
+
 Use nodemon for easier development and auto-restarting the server upon file changes:
 
 ```bash
@@ -175,7 +213,7 @@ nodemon server.js
 
 #### 2. Testing the API
 
-You can use tools like Postman or curl to interact with the API endpoints. For example, to upload an artwork, 
+You can use tools like Postman or curl to interact with the API endpoints. For example, to upload an artwork,
 send a POST request with the required fields and an image file using Postman.
 
 #### 3. Error Handling
@@ -183,9 +221,5 @@ send a POST request with the required fields and an image file using Postman.
 Authentication errors return a 401 status.
 Validation errors return a 400 status with detailed error messages.
 Server errors (e.g., database issues) return a 500 status.
-
-
-
-
 
 ## Developed with 💻 and ☕ by [Reddy](https://github.com/Hanamaraddi17/) and [akshay](https://github.com/AkahayKumarS)
