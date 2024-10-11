@@ -27,13 +27,16 @@ exports.signup = async (req, res) => {
       }
   
       const user = results[0];
+      console.log(`user details : ${user.password}`);
+      console.log(`user details : ${user.user_id}`);
+      console.log(`user details : ${user.username}`);
       const isPasswordValid = await bcrypt.compare(password, user.password);
   
       if (!isPasswordValid) {
         return res.status(401).json({ message: "Invalid credentials" });
       }
-  
-      const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+      console.log(`user id while signing : ${user.user_id}`)
+      const token = jwt.sign({ user:user.user_id }, process.env.JWT_SECRET, {
         expiresIn: "1h",
       });
       res.json({ token });

@@ -10,24 +10,6 @@ const artistRoutes = require('./routes/artistRoutes');
 const app = express();
 app.use(bodyParser.json());
 
-
-const fs = require('fs');
-const path = require('path');
-
-// Define the uploads directory path
-const uploadsDir = path.join(__dirname, 'uploads');
-
-// Check if the uploads directory exists, and create it if it doesn't
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true }); // Create the uploads directory
-  console.log('Uploads directory created at:', uploadsDir);
-} else {
-  console.log('Uploads directory already exists at:', uploadsDir);
-}
-
-
-
-
 app.use('/auth', authRoutes);
 app.use('/artworks', artworkRoutes);
 app.use('/orders', orderRoutes);

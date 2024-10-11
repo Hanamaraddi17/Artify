@@ -128,7 +128,7 @@ exports.deleteArtwork = async (req, res) => {
       return res.status(400).json({ error: "Artwork ID is required" });
     }
 
-    const userId = req.user.id;
+    const userId = req.user.userId;
 
     // Check if the artwork exists and get the owner's ID
     const ownerId = await getArtworkOwner(artworkId);
