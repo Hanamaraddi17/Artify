@@ -5,11 +5,11 @@ exports.joinArtist = (req, res) => {
   console.log("Received request to create artist");
 
   // Destructure data from the request body
-  const { fullname, age, biography, address, phone,email } = req.body;
+  const { fullname, age, biography, address, phone, email } = req.body;
   const photo = req.file ? req.file.path : null; // From Multer
   const user_id = req.user.id; // From auth middleware
 
-  console.log(`in aritst Controller ${req.user.id}`)
+  console.log(`in aritst Controller ${req.user.id}`);
 
   // SQL query to insert the artist into the database
   const query = `INSERT INTO Artists (fullname, age, biography, photo, address, phone,email,user_id) 
@@ -18,14 +18,19 @@ exports.joinArtist = (req, res) => {
   // Execute the query
   db.query(
     query,
-    [fullname, age, biography, photo, address, phone, email,user_id],
+    [fullname, age, biography, photo, address, phone, email, user_id],
     (error, results) => {
       if (error) {
-        console.error("Error inserting artist into the database:", error.message);
+        console.error(
+          "Error inserting artist into the database:",
+          error.message
+        );
         return res.status(500).json({ error: error.message });
       }
       console.log("Artist created with ID:", results.insertId);
-      res.status(201).json({ message: "Artist created", artistId: results.insertId });
+      res
+        .status(201)
+        .json({ message: "Artist created", artistId: results.insertId });
     }
   );
 };
@@ -94,7 +99,9 @@ const getArtistOwner = async (artistId) => {
 
     db.query(query, [artistId], (error, results) => {
       if (error) {
-        return reject(new Error(`Error fetching artist owner: ${error.message}`));
+        return reject(
+          new Error(`Error fetching artist owner: ${error.message}`)
+        );
       }
 
       if (results.length === 0) {
@@ -122,7 +129,9 @@ exports.deleteArtist = async (req, res) => {
 
     // Check if the user is the owner of the artist profile
     if (userId !== ownerId) {
-      return res.status(403).json({ error: "You are not authorized to delete this artist" });
+      return res
+        .status(403)
+        .json({ error: "You are not authorized to delete this artist" });
     }
 
     // Delete the artist from the database

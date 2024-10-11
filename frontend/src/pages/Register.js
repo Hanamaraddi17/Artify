@@ -2,15 +2,41 @@ import React, { useState } from "react";
 import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
 import { useNavigate } from "react-router-dom"; // To handle redirection
 
+// Regex for password validation (at least 8 characters, 1 uppercase, 1 special character, 1 digit)
+const passwordRegex =
+  /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+// Validation for email format
+const validateEmail = (email) => {
+  return /\S+@\S+\.\S+/.test(email);
+};
+
 const LoginComponent = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
+    // Basic validation
+    if (!validateEmail(email)) {
+      setErrorMessage("Invalid email format");
+      setTimeout(() => setErrorMessage(""), 2000);
+      return;
+    }
+
+    if (!passwordRegex.test(password)) {
+      setErrorMessage(
+        "Password must have at least 8 characters, 1 uppercase, 1 special character, and 1 digit"
+      );
+      setTimeout(() => setErrorMessage(""), 2000);
+      return;
+    }
+
     try {
       const response = await fetch("http://localhost:5000/auth/login", {
         method: "POST",
@@ -27,9 +53,13 @@ const LoginComponent = () => {
           setShowModal(false);
           navigate("/"); // Redirect to Home page
         }, 2000);
+      } else {
+        setErrorMessage("Login failed: " + data.message);
+        setTimeout(() => setErrorMessage(""), 2000);
       }
     } catch (error) {
-      console.error("Login failed:", error);
+      setErrorMessage("Login failed: " + error.message);
+      setTimeout(() => setErrorMessage(""), 2000);
     }
   };
 
@@ -44,7 +74,9 @@ const LoginComponent = () => {
         {showModal && (
           <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-500 bg-opacity-50">
             <div className="bg-white p-8 rounded-lg shadow-lg">
-              <p className="text-center font-bold">Login Successful!</p>
+              <p className="text-center font-bold text-green-500">
+                Login Successful!
+              </p>
             </div>
           </div>
         )}
@@ -67,10 +99,15 @@ const LoginComponent = () => {
             />
           </button>
         </div>
-
         <p className="text-center text-gray-500 mb-6">
           or use your email account
         </p>
+        {/* Display error message */}
+        {errorMessage && (
+          <div className="text-center text-red-500 mb-4">{errorMessage}</div>
+        )}
+
+        {/* Login form */}
         <form className="space-y-6" onSubmit={handleLogin}>
           <div className="relative">
             <Mail className="absolute top-3 left-3 h-5 w-5 text-gray-400" />
@@ -103,11 +140,7 @@ const LoginComponent = () => {
               )}
             </button>
           </div>
-          <div className="text-right">
-            <a href="#" className="text-sm text-blue-500 hover:text-blue-600">
-              Forgot your password?
-            </a>
-          </div>
+
           <button
             type="submit"
             className="w-full py-2 px-4 rounded-full text-white bg-blue-400 hover:bg-blue-500 transition-all duration-300"
@@ -137,11 +170,34 @@ const SignupComponent = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
   const handleSignup = async (e) => {
     e.preventDefault();
+
+    // Basic validation
+    if (username.length < 3) {
+      setErrorMessage("Username must be at least 3 characters long");
+      setTimeout(() => setErrorMessage(""), 2000);
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      setErrorMessage("Invalid email format");
+      setTimeout(() => setErrorMessage(""), 2000);
+      return;
+    }
+
+    if (!passwordRegex.test(password)) {
+      setErrorMessage(
+        "Password must have at least 8 characters, 1 uppercase, 1 special character, and 1 digit"
+      );
+      setTimeout(() => setErrorMessage(""), 2000);
+      return;
+    }
+
     try {
       const response = await fetch("http://localhost:5000/auth/signup", {
         method: "POST",
@@ -158,9 +214,13 @@ const SignupComponent = () => {
           setShowModal(false);
           navigate("/login"); // Redirect to login page after 2 seconds
         }, 2000);
+      } else {
+        setErrorMessage("Signup failed: " + data.message);
+        setTimeout(() => setErrorMessage(""), 2000);
       }
     } catch (error) {
-      console.error("Signup failed:", error);
+      setErrorMessage("Signup failed: " + error.message);
+      setTimeout(() => setErrorMessage(""), 2000);
     }
   };
 
@@ -188,7 +248,9 @@ const SignupComponent = () => {
         {showModal && (
           <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-500 bg-opacity-50">
             <div className="bg-white p-8 rounded-lg shadow-lg">
-              <p className="text-center font-bold">Signup Successful!</p>
+              <p className="text-center font-bold text-green-500">
+                Signup Successful!
+              </p>
             </div>
           </div>
         )}
@@ -215,6 +277,12 @@ const SignupComponent = () => {
         <p className="text-center text-gray-500 mb-6">
           or use your email for registration
         </p>
+        {/* Display error message */}
+        {errorMessage && (
+          <div className="text-center text-red-500 mb-4">{errorMessage}</div>
+        )}
+
+        {/* Signup form */}
         <form className="space-y-6" onSubmit={handleSignup}>
           <div className="relative">
             <User className="absolute top-3 left-3 h-5 w-5 text-gray-400" />
@@ -222,7 +290,7 @@ const SignupComponent = () => {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="Name"
+              placeholder="Username"
               className="pl-10 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
@@ -257,6 +325,7 @@ const SignupComponent = () => {
               )}
             </button>
           </div>
+
           <button
             type="submit"
             className="w-full py-2 px-4 rounded-full text-white bg-blue-400 hover:bg-blue-500 transition-all duration-300"
