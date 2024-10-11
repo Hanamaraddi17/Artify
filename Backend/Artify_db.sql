@@ -16,11 +16,12 @@ CREATE TABLE artists (
     photo VARCHAR(255),
     address VARCHAR(255),
     phone VARCHAR(20),
-    email VARCHAR(255) UNIQUE,
+    email VARCHAR(255) NOT NULL UNIQUE,  -- Ensure email is unique and not null
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     user_id INT,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
+
 
 CREATE TABLE artworks (
     artwork_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,

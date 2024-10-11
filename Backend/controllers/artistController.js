@@ -5,18 +5,20 @@ exports.joinArtist = (req, res) => {
   console.log("Received request to create artist");
 
   // Destructure data from the request body
-  const { fullname, age, biography, address, phone } = req.body;
+  const { fullname, age, biography, address, phone,email } = req.body;
   const photo = req.file ? req.file.path : null; // From Multer
-  const userId = req.user.id; // From auth middleware
+  const user_id = req.user.id; // From auth middleware
+
+  console.log(`in aritst Controller ${req.user.id}`)
 
   // SQL query to insert the artist into the database
-  const query = `INSERT INTO Artists (fullname, age, biography, photo, address, phone, user_id) 
-                 VALUES (?, ?, ?, ?, ?, ?, ?)`;
+  const query = `INSERT INTO Artists (fullname, age, biography, photo, address, phone,email,user_id) 
+                 VALUES (?, ?, ?, ?, ?, ?,?,?)`;
 
   // Execute the query
   db.query(
     query,
-    [fullname, age, biography, photo, address, phone, userId],
+    [fullname, age, biography, photo, address, phone, email,user_id],
     (error, results) => {
       if (error) {
         console.error("Error inserting artist into the database:", error.message);
