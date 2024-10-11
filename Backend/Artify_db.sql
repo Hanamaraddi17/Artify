@@ -1,6 +1,4 @@
-CREATE DATABASE artify_db;
 
-USE artify_db;
 
 CREATE TABLE users (
     user_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,

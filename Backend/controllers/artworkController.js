@@ -9,13 +9,12 @@ exports.uploadArtwork = (req, res) => {
   const artistId = req.user.user_id; // From auth middleware, identifies the artist
   const imageUrl = req.file ? req.file.path : null; // Image uploaded via Multer
 
-  
   console.log("Title:", title);
   console.log("Description:", description);
   console.log("Price:", price);
   console.log("Artist ID:", artistId);
   console.log("Image URL:", imageUrl);
-  
+
   // Validation: Check if all required fields are provided
   if (!title || !description || !price || isNaN(price) || price <= 0) {
     return res.status(400).json({
@@ -32,15 +31,19 @@ exports.uploadArtwork = (req, res) => {
     [title, description, price, imageUrl, artistId],
     (error, results) => {
       if (error) {
-        console.error("Error inserting artwork into the database:", error.message);
+        console.error(
+          "Error inserting artwork into the database:",
+          error.message
+        );
         return res.status(500).json({ error: error.message });
       }
       console.log("Artwork created with ID:", results.insertId);
-      res.status(201).json({ message: "Artwork created", artworkId: results.insertId });
+      res
+        .status(201)
+        .json({ message: "Artwork created", artworkId: results.insertId });
     }
   );
 };
-
 
 // =============================== Fetch all artworks ===========================
 exports.fetchArtworks = (req, res) => {
@@ -51,7 +54,10 @@ exports.fetchArtworks = (req, res) => {
 
   db.query(query, (error, results) => {
     if (error) {
-      console.error("Error fetching artworks from the database:", error.message);
+      console.error(
+        "Error fetching artworks from the database:",
+        error.message
+      );
       return res.status(500).json({ error: error.message });
     }
     console.log("Fetched artworks:", results);
@@ -107,7 +113,9 @@ const getArtworkOwner = async (artworkId) => {
 
     db.query(query, [artworkId], (error, results) => {
       if (error) {
-        return reject(new Error(`Error fetching artwork owner: ${error.message}`));
+        return reject(
+          new Error(`Error fetching artwork owner: ${error.message}`)
+        );
       }
 
       if (results.length === 0) {
@@ -151,7 +159,6 @@ exports.deleteArtwork = async (req, res) => {
   }
 };
 
-
 // ========================== Increment likes for a specific artwork==============================
 
 exports.incrementLike = (req, res) => {
@@ -176,14 +183,13 @@ exports.incrementLike = (req, res) => {
   });
 };
 
-
-
 // =======================Fetch likes count for a specific artwork=========================
-
 
 exports.fetchLikes = (req, res) => {
   const artworkId = req.params.id; // Get the artwork ID from the request parameters
-  console.log(`Received request to fetch likes for artwork with ID: ${artworkId}`);
+  console.log(
+    `Received request to fetch likes for artwork with ID: ${artworkId}`
+  );
 
   // SQL query to fetch the likes count for the specified artwork
   const query = "SELECT likes FROM artworks WHERE artwork_id = ?";

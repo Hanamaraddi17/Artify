@@ -1,17 +1,53 @@
 import React, { useState } from "react";
-import { Eye, EyeOff, Mail, Lock, User } from "lucide-react"; // Removed the unused icons
+import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
+import { useNavigate } from "react-router-dom"; // To handle redirection
 
 const LoginComponent = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch("http://localhost:5000/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+      if (data.token) {
+        setShowModal(true);
+        setTimeout(() => {
+          setShowModal(false);
+          navigate("/"); // Redirect to Home page
+        }, 2000);
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
+  };
 
   return (
     <div className="flex max-w-5xl mx-auto bg-white my-16 rounded-xl shadow-xl overflow-hidden">
-      {/* Login Form */}
       <div className="w-1/2 p-12">
         <h2 className="text-3xl font-bold mb-6 text-blue-400 text-center">
           Log in to <span className="text-blue-900">Artify</span>
         </h2>
 
+        {/* Modal for login success */}
+        {showModal && (
+          <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-500 bg-opacity-50">
+            <div className="bg-white p-8 rounded-lg shadow-lg">
+              <p className="text-center font-bold">Login Successful!</p>
+            </div>
+          </div>
+        )}
         <div className="flex justify-center space-x-4 mb-6">
           <button className="p-2 border rounded-full hover:bg-gray-50">
             <img src="/images/google.png" alt="Google" className="w-6 h-6" />
@@ -35,13 +71,13 @@ const LoginComponent = () => {
         <p className="text-center text-gray-500 mb-6">
           or use your email account
         </p>
-
-        {/* Rest of the LoginComponent code remains exactly the same */}
-        <form className="space-y-6">
+        <form className="space-y-6" onSubmit={handleLogin}>
           <div className="relative">
             <Mail className="absolute top-3 left-3 h-5 w-5 text-gray-400" />
             <input
               type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="Email"
               className="pl-10 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -50,6 +86,8 @@ const LoginComponent = () => {
             <Lock className="absolute top-3 left-3 h-5 w-5 text-gray-400" />
             <input
               type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
               className="pl-10 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -78,11 +116,10 @@ const LoginComponent = () => {
           </button>
         </form>
       </div>
-      {/* blue Side Panel */}
       <div className="w-1/2 bg-blue-400 p-12 text-white flex flex-col justify-center items-center">
         <h2 className="text-4xl font-bold mb-4">Hello, Friend!</h2>
         <p className="text-center mb-8">
-          Enter your personal details and start journey with us
+          Enter your personal details and start your journey with us
         </p>
         <button
           onClick={() => (window.location.href = "/signup")}
@@ -97,14 +134,42 @@ const LoginComponent = () => {
 
 const SignupComponent = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSignup = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch("http://localhost:5000/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, email, password }),
+      });
+
+      const data = await response.json();
+      if (data.message) {
+        setShowModal(true);
+        setTimeout(() => {
+          setShowModal(false);
+          navigate("/login"); // Redirect to login page after 2 seconds
+        }, 2000);
+      }
+    } catch (error) {
+      console.error("Signup failed:", error);
+    }
+  };
 
   return (
     <div className="flex max-w-5xl mx-auto bg-white my-16 rounded-xl shadow-xl overflow-hidden">
-      {/* blue Side Panel */}
       <div className="w-1/2 bg-blue-400 p-12 text-white flex flex-col justify-center items-center">
         <h2 className="text-4xl font-bold mb-4">Welcome Back!</h2>
         <p className="text-center mb-8">
-          To keep connected with us please login with your personal info
+          To keep connected with us, please login with your personal info
         </p>
         <button
           onClick={() => (window.location.href = "/login")}
@@ -114,12 +179,19 @@ const SignupComponent = () => {
         </button>
       </div>
 
-      {/* Signup Form */}
       <div className="w-1/2 p-12">
         <h2 className="text-3xl font-bold mb-6 text-blue-400 text-center">
           Create <span className="text-blue-900">Account</span>
         </h2>
 
+        {/* Modal for signup success */}
+        {showModal && (
+          <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-500 bg-opacity-50">
+            <div className="bg-white p-8 rounded-lg shadow-lg">
+              <p className="text-center font-bold">Signup Successful!</p>
+            </div>
+          </div>
+        )}
         <div className="flex justify-center space-x-4 mb-6">
           <button className="p-2 border rounded-full hover:bg-gray-50">
             <img src="/images/google.png" alt="Google" className="w-6 h-6" />
@@ -143,13 +215,13 @@ const SignupComponent = () => {
         <p className="text-center text-gray-500 mb-6">
           or use your email for registration
         </p>
-
-        {/* Rest of the SignupComponent code remains exactly the same */}
-        <form className="space-y-6">
+        <form className="space-y-6" onSubmit={handleSignup}>
           <div className="relative">
             <User className="absolute top-3 left-3 h-5 w-5 text-gray-400" />
             <input
               type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               placeholder="Name"
               className="pl-10 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -158,6 +230,8 @@ const SignupComponent = () => {
             <Mail className="absolute top-3 left-3 h-5 w-5 text-gray-400" />
             <input
               type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="Email"
               className="pl-10 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -166,6 +240,8 @@ const SignupComponent = () => {
             <Lock className="absolute top-3 left-3 h-5 w-5 text-gray-400" />
             <input
               type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
               className="pl-10 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
