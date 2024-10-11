@@ -3,7 +3,7 @@ const db = require('../config/db');
 // Add to cart
 exports.addToCart = (req, res) => {
     const { artwork_id, quantity } = req.body;
-    const user_id = req.user_id;
+    const user_id = req.user.id;
 
     // Check if the artwork is already in the cart
     const checkQuery = "SELECT * FROM Cart WHERE user_id = ? AND artwork_id = ?";
@@ -65,4 +65,4 @@ exports.fetchCartItems = (req, res) => {
         }
         res.status(200).json(results);
     });
-};
+}; 

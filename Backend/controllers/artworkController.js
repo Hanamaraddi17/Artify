@@ -1,44 +1,72 @@
 const db = require("../config/db");
 
-// Create a new artwork
-exports.uploadArtwork = (req, res) => {
+// Function to check if the user is an artist
+const isArtist = (userId) => {
+  return new Promise((resolve, reject) => {
+    const query = "SELECT artist_id FROM artists WHERE user_id = ?";
+    db.query(query, [userId], (error, results) => {
+      if (error) {
+        return reject(new Error("Error checking artist status: " + error.message));
+      }
+      if (results.length === 0) {
+        return resolve(false); // User is not an artist
+      }
+      resolve(results[0].artist_id); // Return the artist ID if found
+    });
+  });
+};
+
+// Create a new artwork (only for artists)
+exports.uploadArtwork = async (req, res) => {
   console.log("Received request to create artwork");
 
-  // Destructure data from the request body
   const { title, description, price } = req.body;
-  const artistId = req.user.user_id; // From auth middleware, identifies the artist
+  const userId = req.user.id; // Get user ID from the authenticated user
   const imageUrl = req.file ? req.file.path : null; // Image uploaded via Multer
 
-  
   console.log("Title:", title);
   console.log("Description:", description);
   console.log("Price:", price);
-  console.log("Artist ID:", artistId);
+  console.log("User ID:", userId);
   console.log("Image URL:", imageUrl);
-  
+
   // Validation: Check if all required fields are provided
   if (!title || !description || !price || isNaN(price) || price <= 0) {
     return res.status(400).json({
       error: "Title, description, and a valid price are required.",
     });
   }
-  // SQL query to insert the artwork into the database
-  const query = `INSERT INTO artworks (title, description, price, image_url, artist_id) 
-                 VALUES (?, ?, ?, ?, ?)`;
 
-  // Execute the query
-  db.query(
-    query,
-    [title, description, price, imageUrl, artistId],
-    (error, results) => {
-      if (error) {
-        console.error("Error inserting artwork into the database:", error.message);
-        return res.status(500).json({ error: error.message });
-      }
-      console.log("Artwork created with ID:", results.insertId);
-      res.status(201).json({ message: "Artwork created", artworkId: results.insertId });
+  try {
+    // Check if the user is an artist
+    const artistId = await isArtist(userId);
+    if (!artistId) {
+      return res.status(403).json({
+        error: "Only artists are allowed to create artworks.",
+      });
     }
-  );
+
+    // SQL query to insert the artwork into the database
+    const query = `INSERT INTO artworks (title, description, price, image_url, artist_id) 
+                   VALUES (?, ?, ?, ?, ?)`;
+
+    // Execute the query
+    db.query(
+      query,
+      [title, description, price, imageUrl, artistId],
+      (error, results) => {
+        if (error) {
+          console.error("Error inserting artwork into the database:", error.message);
+          return res.status(500).json({ error: error.message });
+        }
+        console.log("Artwork created with ID:", results.insertId);
+        res.status(201).json({ message: "Artwork created", artworkId: results.insertId });
+      }
+    );
+  } catch (error) {
+    console.error("Error during artwork creation:", error.message);
+    res.status(500).json({ error: error.message });
+  }
 };
 
 
@@ -83,6 +111,7 @@ exports.fetchArtworkById = (req, res) => {
 };
 
 // ============================ Delete Artwork ============================
+
 const deleteFromDb = async (artworkId) => {
   return new Promise((resolve, reject) => {
     const query = "DELETE FROM artworks WHERE artwork_id = ?";
@@ -114,7 +143,26 @@ const getArtworkOwner = async (artworkId) => {
         return reject(new Error("Artwork not found"));
       }
 
-      resolve(results[0].artist_id);
+      resolve(results[0].artist_id); // Return the artist ID of the artwork owner
+    });
+  });
+};
+
+// Function to get the artist ID of the logged-in user
+const getUserArtistId = async (userId) => {
+  return new Promise((resolve, reject) => {
+    const query = "SELECT artist_id FROM artists WHERE user_id = ?";
+
+    db.query(query, [userId], (error, results) => {
+      if (error) {
+        return reject(new Error(`Error fetching artist ID: ${error.message}`));
+      }
+
+      if (results.length === 0) {
+        return reject(new Error("Artist profile not found"));
+      }
+
+      resolve(results[0].artist_id); // Return the artist ID of the logged-in user
     });
   });
 };
@@ -128,13 +176,16 @@ exports.deleteArtwork = async (req, res) => {
       return res.status(400).json({ error: "Artwork ID is required" });
     }
 
-    const userId = req.user.userId;
+    const userId = req.user.id;
 
-    // Check if the artwork exists and get the owner's ID
-    const ownerId = await getArtworkOwner(artworkId);
+    // Get the artist ID of the logged-in user
+    const userArtistId = await getUserArtistId(userId);
 
-    // Check if the user is the owner of the artwork
-    if (userId !== ownerId) {
+    // Get the owner (artist) ID of the artwork
+    const artworkOwnerId = await getArtworkOwner(artworkId);
+
+    // Check if the logged-in artist is the owner of the artwork
+    if (userArtistId !== artworkOwnerId) {
       return res
         .status(403)
         .json({ error: "You are not authorized to delete this artwork" });
@@ -150,7 +201,6 @@ exports.deleteArtwork = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
 
 // ========================== Increment likes for a specific artwork==============================
 
