@@ -9,6 +9,9 @@ function HomePage() {
   const handleButtonClick = () => {
     navigate("/gallery");
   };
+  const handleRegistration = () => {
+    navigate("/artist-registration");
+  };
 
   const featuredArtworks = [
     {
@@ -17,6 +20,7 @@ function HomePage() {
       artist: "Jane Doe",
       imageUrl: "/images/sunset.jpg",
       price: 1200,
+      category: "Urban",
     },
     {
       id: 2,
@@ -24,6 +28,8 @@ function HomePage() {
       artist: "John Smith",
       imageUrl: "/images/sunset1.jpg",
       price: 950,
+
+      category: "Abstract",
     },
     {
       id: 3,
@@ -31,6 +37,7 @@ function HomePage() {
       artist: "Akshay Kumar S",
       imageUrl: "/images/virat.jpg",
       price: 1500,
+      category: "Portrait",
     },
   ];
 
@@ -55,7 +62,10 @@ function HomePage() {
               >
                 Explore Gallery
               </button>
-              <button className="bg-white text-blue-500 px-6 py-2 rounded border border-blue-500  transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50">
+              <button
+                className="bg-white text-blue-500 px-6 py-2 rounded border border-blue-500  transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50"
+                onClick={handleRegistration}
+              >
                 Join as an Artist
               </button>
             </div>

@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
-import { ChevronDown, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import UserProfileDropdown from "./UserProfileDropdown"; // Import the new component
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   // Get the current path
   const location = useLocation();
@@ -69,41 +68,7 @@ const Navbar = () => {
           >
             Artists
           </a>
-          <div className="relative group">
-            <a
-              href="#"
-              className={`${
-                currentPath.startsWith("/category")
-                  ? "text-blue-500"
-                  : "text-gray-600"
-              } hover:text-blue-500 flex items-center`}
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            >
-              Categories <ChevronDown className="ml-1 w-4 h-4" />
-            </a>
-            {isDropdownOpen && (
-              <div className="absolute mt-2 py-2 w-48 bg-white border rounded-md shadow-lg">
-                <a
-                  href="/category"
-                  className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
-                >
-                  Paintings
-                </a>
-                <a
-                  href="/category"
-                  className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
-                >
-                  Sculptures
-                </a>
-                <a
-                  href="/category"
-                  className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
-                >
-                  Photography
-                </a>
-              </div>
-            )}
-          </div>
+
           <a
             href="/about"
             className={`${
@@ -128,7 +93,7 @@ const Navbar = () => {
             href="/signup"
             className="bg-blue-100 text-blue-500 px-6 py-2 rounded-full hover:bg-blue-200 transition-colors duration-300"
           >
-            Signup
+            Sign Up
           </a>
           <UserProfileDropdown />{" "}
           {/* Replace the Profile button with UserProfileDropdown */}

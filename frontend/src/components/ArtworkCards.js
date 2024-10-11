@@ -1,7 +1,7 @@
 import React from "react";
 import { Heart, Share2, ShoppingCart, CreditCard } from "lucide-react";
 
-const ArtworkCards = ({ imageUrl, title, artist, price }) => {
+const ArtworkCards = ({ imageUrl, title, artist, price, category }) => {
   return (
     <div className="max-w-sm rounded-2xl overflow-hidden shadow-lg bg-white transition-all duration-700 ease-in-out hover:-translate-y-4 hover:shadow-2xl relative group">
       <img className="w-full h-64 object-cover" src={imageUrl} alt={title} />
@@ -11,15 +11,18 @@ const ArtworkCards = ({ imageUrl, title, artist, price }) => {
         <p className="text-blue-600 font-semibold">₹{price}</p>
       </div>
       <div className="px-6 pt-4 pb-2 flex justify-between items-center">
-        <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm  text-gray-700 mr-2 mb-2">
-          #artwork
+        <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm text-gray-700 mr-2 mb-2 transition-all duration-300 hover:bg-gray-300">
+          #{category}
         </span>
         <div className="flex space-x-2">
           <button className="w-10 h-10 flex items-center justify-center bg-red-100 rounded-full transition-all duration-300 hover:bg-red-500 group">
-            <Heart size={25} className="text-red-500 hover:text-white" />
+            <Heart size={25} className="text-red-500 group-hover:text-white" />
           </button>
           <button className="w-10 h-10 flex items-center justify-center bg-green-100 rounded-full transition-all duration-300 hover:bg-green-500 group">
-            <Share2 size={25} className="text-green-500 hover:text-white" />
+            <Share2
+              size={25}
+              className="text-green-500 group-hover:text-white"
+            />
           </button>
         </div>
       </div>

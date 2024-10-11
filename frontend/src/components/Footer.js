@@ -107,7 +107,7 @@ const Footer = () => {
           </div>
         </div>
       </div>
-      <div className="mt-8 bg-blue-100 py-4 w-full">
+      <div className="mt-8 bg-blue-100 py-4 w-full text-sm">
         <div className="flex justify-between items-center px-4">
           <p>
             &copy; Copyright <strong>Artify</strong>. All Rights Reserved

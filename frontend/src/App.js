@@ -7,6 +7,9 @@ import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
 import { LoginComponent, SignupComponent } from "./pages/Register";
 import GalleryPage from "./pages/GalleryPage";
+import ArtistInfoPage from "./components/ArtistInfoPage";
+import ArtistsTablePage from "./pages/ArtistsTablePage";
+import ArtistRegistrationPage from "./pages/ArtistRegistrationPage";
 
 // Create a layout with bg-blue-100 without altering the component sizes
 const AuthPage = ({ component: Component }) => {
@@ -33,7 +36,12 @@ function App() {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/gallery" element={<GalleryPage />} />
-
+          <Route exact path="/artists" element={<ArtistsTablePage />} />
+          <Route path="/artist/:id" element={<ArtistInfoPage />} />
+          <Route
+            path="/artist-registration"
+            element={<ArtistRegistrationPage />}
+          />
           {/* Add Login route with AuthPage wrapper */}
           <Route
             path="/login"
