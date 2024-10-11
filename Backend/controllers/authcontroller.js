@@ -2,10 +2,21 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../config/db');
 
-
 // Signup 
 exports.signup = async (req, res) => {
     const { username, email, password } = req.body;
+
+    // Validation: Ensure username, email, and password are not empty and meet minimum length requirements
+    if (!username || username.length < 3) {
+        return res.status(400).json({ error: "Username must be at least 3 characters long." });
+    }
+    if (!email || email.length < 5) {
+        return res.status(400).json({ error: "Email must be at least 5 characters long." });
+    }
+    if (!password || password.length < 6) {
+        return res.status(400).json({ error: "Password must be at least 6 characters long." });
+    }
+
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
         const query = "INSERT INTO Users (username, email, password) VALUES (?, ?, ?)";
@@ -24,6 +35,15 @@ exports.signup = async (req, res) => {
 // Login
 exports.login = async (req, res) => {
     const { email, password } = req.body;
+
+    // Validation: Ensure email and password are provided and meet minimum length requirements
+    if (!email || email.length < 5) {
+        return res.status(400).json({ error: "Email must be at least 5 characters long." });
+    }
+    if (!password || password.length < 6) {
+        return res.status(400).json({ error: "Password must be at least 6 characters long." });
+    }
+
     const query = "SELECT * FROM Users WHERE email = ?";
     
     db.query(query, [email], async (error, results) => {
