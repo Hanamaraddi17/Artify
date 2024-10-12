@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react"; // Added useEffect
 import {
   Upload,
   User,
@@ -8,30 +8,115 @@ import {
   Calendar,
   FileText,
 } from "lucide-react";
-import { Alert, AlertDescription } from "../components/Alert"; // Update the import path based on your file structure
+import { Alert, AlertDescription } from "../components/Alert"; // Ensure the path is correct
 
-export default function ArtistRegistrationForm() {
+export default function ArtistRegistrationPage() {
   const [formData, setFormData] = useState({
-    fullName: "",
+    fullname: "", // Changed from fullName to fullname
     email: "",
     phone: "",
     age: "",
     address: "",
     biography: "",
-    profilePhoto: null,
+    photo: null, // Changed from profilePhoto to photo
   });
-  const [submitStatus, setSubmitStatus] = useState("");
+  const [submitStatus, setSubmitStatus] = useState(""); // Possible values: "", "success", "error"
+  const [errorMessage, setErrorMessage] = useState("");
+  const [uploadedFileName, setUploadedFileName] = useState(""); // New State for File Name
 
-  const handleSubmit = (e) => {
+  // useEffect to handle timeout for success and error messages
+  useEffect(() => {
+    if (submitStatus === "success" || submitStatus === "error") {
+      const timer = setTimeout(() => {
+        setSubmitStatus("");
+        if (submitStatus === "error") {
+          setErrorMessage("");
+        }
+      }, 3000); // 3 seconds
+
+      // Cleanup the timer if the component unmounts or if submitStatus changes
+      return () => clearTimeout(timer);
+    }
+  }, [submitStatus]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitStatus("success");
-    // Handle form submission logic here
+
+    // Reset previous messages
+    setSubmitStatus("");
+    setErrorMessage("");
+
+    // Validate form data
+    const { fullname, email, phone, age, address, biography, photo } = formData;
+    if (
+      !fullname ||
+      !email ||
+      !phone ||
+      !age ||
+      !address ||
+      !biography ||
+      !photo
+    ) {
+      setErrorMessage(
+        "Please fill in all the fields and upload a profile photo."
+      );
+      setSubmitStatus("error");
+      return;
+    }
+
+    // Create FormData object
+    const data = new FormData();
+    data.append("fullname", formData.fullname); // Changed from fullName to fullname
+    data.append("email", formData.email);
+    data.append("phone", formData.phone);
+    data.append("age", formData.age);
+    data.append("address", formData.address);
+    data.append("biography", formData.biography);
+    data.append("photo", formData.photo); // Changed from profilePhoto to photo
+
+    const token = localStorage.getItem("authToken");
+
+    try {
+      const response = await fetch("http://localhost:5000/artist/join", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`, // Correctly set the Authorization header
+        },
+        body: data,
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setSubmitStatus("success");
+        // Optionally, reset the form
+        setFormData({
+          fullname: "",
+          email: "",
+          phone: "",
+          age: "",
+          address: "",
+          biography: "",
+          photo: null,
+        });
+        setUploadedFileName(""); // Clear the uploaded file name after success
+      } else {
+        // Handle server errors
+        setErrorMessage(result.error || "Registration failed.");
+        setSubmitStatus("error");
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      setErrorMessage("An unexpected error occurred. Please try again later.");
+      setSubmitStatus("error");
+    }
   };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setFormData({ ...formData, profilePhoto: file });
+      setFormData({ ...formData, photo: file }); // Changed from profilePhoto to photo
+      setUploadedFileName(file.name); // Set the uploaded file name
     }
   };
 
@@ -60,8 +145,9 @@ export default function ArtistRegistrationForm() {
                 required
                 className="pl-10 w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                 placeholder="Enter your full name"
-                onChange={(e) =>
-                  setFormData({ ...formData, fullName: e.target.value })
+                value={formData.fullname} // Changed to fullname
+                onChange={
+                  (e) => setFormData({ ...formData, fullname: e.target.value }) // Changed to fullname
                 }
               />
             </div>
@@ -80,6 +166,7 @@ export default function ArtistRegistrationForm() {
                   required
                   className="pl-10 w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                   placeholder="your@email.com"
+                  value={formData.email}
                   onChange={(e) =>
                     setFormData({ ...formData, email: e.target.value })
                   }
@@ -98,6 +185,7 @@ export default function ArtistRegistrationForm() {
                   required
                   className="pl-10 w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                   placeholder="(000) 000-0000"
+                  value={formData.phone}
                   onChange={(e) =>
                     setFormData({ ...formData, phone: e.target.value })
                   }
@@ -119,9 +207,11 @@ export default function ArtistRegistrationForm() {
                   required
                   className="pl-10 w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                   placeholder="Enter your age"
+                  value={formData.age}
                   onChange={(e) =>
                     setFormData({ ...formData, age: e.target.value })
                   }
+                  min="0"
                 />
               </div>
             </div>
@@ -137,6 +227,7 @@ export default function ArtistRegistrationForm() {
                   required
                   className="pl-10 w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                   placeholder="Enter your address"
+                  value={formData.address}
                   onChange={(e) =>
                     setFormData({ ...formData, address: e.target.value })
                   }
@@ -156,6 +247,7 @@ export default function ArtistRegistrationForm() {
                 required
                 className="pl-10 w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition h-32"
                 placeholder="Tell us about yourself and your artistic journey..."
+                value={formData.biography}
                 onChange={(e) =>
                   setFormData({ ...formData, biography: e.target.value })
                 }
@@ -182,11 +274,21 @@ export default function ArtistRegistrationForm() {
                     className="opacity-0"
                     accept="image/*"
                     onChange={handleFileChange}
+                    required
                   />
                 </label>
               </div>
             </div>
           </div>
+
+          {/* Uploaded File Name Display */}
+          {uploadedFileName && (
+            <div className="mt-2 text-center">
+              <p className="text-sm text-gray-700">
+                <strong>Selected File:</strong> {uploadedFileName}
+              </p>
+            </div>
+          )}
 
           {/* Submit Button */}
           <div className="flex justify-center">
@@ -204,6 +306,15 @@ export default function ArtistRegistrationForm() {
           <Alert className="mt-6 bg-green-50 border-green-200">
             <AlertDescription className="text-green-800">
               Registration successful! Welcome to the Artify community.
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {/* Error Message */}
+        {submitStatus === "error" && (
+          <Alert className="mt-6 bg-red-50 border-red-200">
+            <AlertDescription className="text-red-800">
+              {errorMessage}
             </AlertDescription>
           </Alert>
         )}

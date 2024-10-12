@@ -14,7 +14,7 @@ const validateEmail = (email) => {
 const LoginComponent = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState(""); 
   const [errorMessage, setErrorMessage] = useState("");
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
@@ -48,6 +48,8 @@ const LoginComponent = () => {
 
       const data = await response.json();
       if (data.token) {
+        localStorage.setItem("authToken", data.token);
+
         setShowModal(true);
         setTimeout(() => {
           setShowModal(false);

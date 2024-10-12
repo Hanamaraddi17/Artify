@@ -5,7 +5,7 @@ const db = require("../config/db");
 exports.joinArtist = (req, res) => {
   console.log("Received request to create artist");
 
-  const { fullname, age, biography, address, phone,  email } = req.body;
+  const { fullname, age, biography, address, phone, email } = req.body;
   const photo = req.file ? req.file.path : null; // From Multer
   const user_id = req.user.id; // From auth middleware
 
@@ -16,14 +16,23 @@ exports.joinArtist = (req, res) => {
                  VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
 
   // Execute the query
-  db.query(query, [fullname, age, biography, photo, address, phone, email, user_id], (error, results) => {
-    if (error) {
-      console.error("Error inserting artist into the database:", error.message);
-      return res.status(500).json({ error: error.message });
+  db.query(
+    query,
+    [fullname, age, biography, photo, address, phone, email, user_id],
+    (error, results) => {
+      if (error) {
+        console.error(
+          "Error inserting artist into the database:",
+          error.message
+        );
+        return res.status(500).json({ error: error.message });
+      }
+      console.log("Artist created with ID:", results.insertId);
+      res
+        .status(201)
+        .json({ message: "Artist created", artistId: results.insertId });
     }
-    console.log("Artist created with ID:", results.insertId);
-    res.status(201).json({ message: "Artist created", artistId: results.insertId });
-  });
+  );
 };
 
 // ========================== Fetch all artists with total artworks ==========================

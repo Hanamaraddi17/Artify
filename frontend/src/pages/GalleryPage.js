@@ -2,38 +2,27 @@ import React, { useState, useEffect } from "react";
 import ArtworkCards from "../components/ArtworkCards";
 import { Search, Upload } from "lucide-react";
 
-// Simulated artwork data (expanded with categories)
-const artworks = [
-  {
-    id: 1,
-    title: "Abstract Harmony",
-    artist: "Jane Doe",
-    price: 500,
-    image: "/images/nature.jpg",
-    category: "Abstract",
-  },
-  {
-    id: 2,
-    title: "Urban Dreams",
-    artist: "John Smith",
-    price: 750,
-    image: "/images/tajmahal.jpg",
-    category: "Urban",
-  },
-  {
-    id: 3,
-    title: "Serenity",
-    artist: "Emma Wilson",
-    price: 600,
-    image: "/images/art.jpg",
-    category: "Landscape",
-  },
-  // ... (other artwork entries)
-];
-
 const GalleryPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredArtworks, setFilteredArtworks] = useState(artworks);
+  const [filteredArtworks, setFilteredArtworks] = useState([]);
+  const [artworks, setArtworks] = useState([]);
+  const [uploadData, setUploadData] = useState({
+    title: "",
+    description: "",
+    price: "",
+    image: null,
+  });
+  const [token, setToken] = useState(""); // Initialize token as an empty string
+
+  useEffect(() => {
+    // Retrieve the token from local storage
+    const storedToken = localStorage.getItem("token");
+    if (storedToken) {
+      setToken(storedToken);
+    }
+
+    fetchArtworks(); // Fetch artworks after setting the token
+  }, [token]);
 
   useEffect(() => {
     const results = artworks.filter(
@@ -42,11 +31,72 @@ const GalleryPage = () => {
         artwork.category.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredArtworks(results);
-  }, [searchTerm]);
+  }, [searchTerm, artworks]);
 
-  // Placeholder function for handling artwork upload
-  const handleUploadClick = () => {
-    console.log("Artwork upload functionality coming soon!");
+  const fetchArtworks = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/artworks/", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      setArtworks(data);
+    } catch (error) {
+      console.error("Error fetching artworks:", error);
+    }
+  };
+
+  const handleUploadClick = async () => {
+    const formData = new FormData();
+    formData.append("title", uploadData.title);
+    formData.append("description", uploadData.description);
+    formData.append("price", uploadData.price);
+    formData.append("artworks", uploadData.image);
+
+    try {
+      const response = await fetch("http://localhost:5000/artworks/upload", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      if (response.ok) {
+        alert("Artwork uploaded successfully!");
+        setUploadData({ title: "", description: "", price: "", image: null }); // Reset upload data
+        fetchArtworks(); // Refresh artworks list
+      } else {
+        alert("Failed to upload artwork.");
+      }
+    } catch (error) {
+      console.error("Error uploading artwork:", error);
+    }
+  };
+
+  const handleLikeArtwork = async (artworkId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/artworks/like/${artworkId}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.ok) {
+        alert("Artwork liked successfully!");
+        fetchArtworks(); // Refresh artworks list to update likes
+      } else {
+        alert("Failed to like artwork.");
+      }
+    } catch (error) {
+      console.error("Error liking artwork:", error);
+    }
   };
 
   return (
@@ -92,12 +142,13 @@ const GalleryPage = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredArtworks.map((artwork) => (
           <ArtworkCards
-            key={artwork.id}
-            imageUrl={artwork.image}
+            key={artwork.artwork_id} // Use artwork_id instead of id
+            imageUrl={artwork.image_url} // Use image_url instead of image
             title={artwork.title}
-            artist={artwork.artist}
+            artist={artwork.artist} // Ensure artist data is correct
             price={artwork.price}
             category={artwork.category}
+            onLike={() => handleLikeArtwork(artwork.artwork_id)} // Pass like handler
           />
         ))}
       </div>
