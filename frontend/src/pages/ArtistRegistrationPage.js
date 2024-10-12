@@ -132,7 +132,7 @@ export default function ArtistRegistrationPage() {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6" encType="multipart/form-data">
+        <form onSubmit={handleSubmit} className="space-y-6">
           {/* Full Name */}
           <div className="relative">
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -264,20 +264,10 @@ export default function ArtistRegistrationPage() {
               <div className="flex items-center justify-center w-full">
                 <label className="flex flex-col w-full h-20 border-2 border-dashed border-blue-400 hover:border-blue-600 rounded-lg cursor-pointer transition-all">
                   <div className="flex flex-col items-center justify-center pt-2">
-                    {photoPreview ? (
-                      <img
-                        src={photoPreview}
-                        alt="Profile Preview"
-                        className="w-20 h-20 rounded-full"
-                      />
-                    ) : (
-                      <>
-                        <Upload className="w-8 h-8 text-gray-400 group-hover:text-gray-600" />
-                        <p className="pt-1 text-sm tracking-wider text-gray-400 group-hover:text-gray-600">
-                          Upload your profile photo
-                        </p>
-                      </>
-                    )}
+                    <Upload className="w-8 h-8 text-gray-400 group-hover:text-gray-600" />
+                    <p className="pt-1 text-sm tracking-wider text-gray-400 group-hover:text-gray-600">
+                      Upload your profile photo
+                    </p>
                   </div>
                   <input
                     type="file"
@@ -306,9 +296,10 @@ export default function ArtistRegistrationPage() {
               type="submit"
               className="bg-green-400 text-white px-8 py-3 rounded-md hover:bg-green-500 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
-              Register
+              Register as Artist
             </button>
           </div>
+        </form>
 
         {/* Success Message */}
         {submitStatus === "success" && (
