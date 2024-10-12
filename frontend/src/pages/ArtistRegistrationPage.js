@@ -8,7 +8,7 @@ import {
   Calendar,
   FileText,
 } from "lucide-react";
-import { Alert, AlertDescription } from "../components/Alert"; // Update the import path based on your file structure
+import { Alert, AlertDescription } from "../components/Alert"; // Adjust path
 
 export default function ArtistRegistrationForm() {
   const [formData, setFormData] = useState({
@@ -20,18 +20,51 @@ export default function ArtistRegistrationForm() {
     biography: "",
     profilePhoto: null,
   });
+  const [photoPreview, setPhotoPreview] = useState(null); // For image preview
   const [submitStatus, setSubmitStatus] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitStatus("success");
-    // Handle form submission logic here
+
+    // Create FormData object for file upload
+    const data = new FormData();
+    data.append("fullname", formData.fullName);
+    data.append("email", formData.email);
+    data.append("phone", formData.phone);
+    data.append("age", formData.age);
+    data.append("address", formData.address);
+    data.append("biography", formData.biography);
+    data.append("photo", formData.profilePhoto); // Append profile photo
+
+    // Retrieve the token from localStorage
+    const token = localStorage.getItem("authToken");
+
+    try {
+      const response = await fetch("http://localhost:5000/artist/join", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`, // Use the token from localStorage
+        },
+        body: data,
+      });
+
+      if (response.ok) {
+        setSubmitStatus("success");
+      } else {
+        setSubmitStatus("error");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      setSubmitStatus("error");
+    }
   };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       setFormData({ ...formData, profilePhoto: file });
+      // Create preview URL
+      setPhotoPreview(URL.createObjectURL(file));
     }
   };
 
@@ -47,7 +80,7 @@ export default function ArtistRegistrationForm() {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6" encType="multipart/form-data">
           {/* Full Name */}
           <div className="relative">
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -172,10 +205,20 @@ export default function ArtistRegistrationForm() {
               <div className="flex items-center justify-center w-full">
                 <label className="flex flex-col w-full h-20 border-2 border-dashed border-blue-400 hover:border-blue-600 rounded-lg cursor-pointer transition-all">
                   <div className="flex flex-col items-center justify-center pt-2">
-                    <Upload className="w-8 h-8 text-gray-400 group-hover:text-gray-600" />
-                    <p className="pt-1 text-sm tracking-wider text-gray-400 group-hover:text-gray-600">
-                      Upload your profile photo
-                    </p>
+                    {photoPreview ? (
+                      <img
+                        src={photoPreview}
+                        alt="Profile Preview"
+                        className="w-20 h-20 rounded-full"
+                      />
+                    ) : (
+                      <>
+                        <Upload className="w-8 h-8 text-gray-400 group-hover:text-gray-600" />
+                        <p className="pt-1 text-sm tracking-wider text-gray-400 group-hover:text-gray-600">
+                          Upload your profile photo
+                        </p>
+                      </>
+                    )}
                   </div>
                   <input
                     type="file"
@@ -194,19 +237,24 @@ export default function ArtistRegistrationForm() {
               type="submit"
               className="bg-green-400 text-white px-8 py-3 rounded-md hover:bg-green-500 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
-              Register as Artist
+              Register
             </button>
           </div>
-        </form>
 
-        {/* Success Message */}
-        {submitStatus === "success" && (
-          <Alert className="mt-6 bg-green-50 border-green-200">
-            <AlertDescription className="text-green-800">
-              Registration successful! Welcome to the Artify community.
-            </AlertDescription>
-          </Alert>
-        )}
+          {/* Display Success or Error Messages */}
+          {submitStatus === "success" && (
+            <Alert>
+              <AlertDescription>Artist registered successfully!</AlertDescription>
+            </Alert>
+          )}
+          {submitStatus === "error" && (
+            <Alert variant="danger">
+              <AlertDescription>
+                An error occurred while registering the artist. Please try again.
+              </AlertDescription>
+            </Alert>
+          )}
+        </form>
       </div>
     </div>
   );

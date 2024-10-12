@@ -48,6 +48,10 @@ const LoginComponent = () => {
 
       const data = await response.json();
       if (data.token) {
+        // Store token in localStorage
+        localStorage.setItem("authToken", data.token);
+
+        // Show success modal
         setShowModal(true);
         setTimeout(() => {
           setShowModal(false);

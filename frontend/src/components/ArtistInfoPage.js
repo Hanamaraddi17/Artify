@@ -80,6 +80,7 @@ const ArtistInfoPage = () => {
       <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden transition-all duration-300 ease-in-out hover:shadow-2xl">
         <div className="md:flex">
           <div className="md:flex-shrink-0">
+            {console.log("artist image :",artistData.photo)}
             <img
               className="h-56 w-full object-cover md:w-48 transition-transform duration-300 ease-in-out hover:scale-105"
               src={artistData.photo}

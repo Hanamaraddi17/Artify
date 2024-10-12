@@ -20,20 +20,21 @@ const isArtist = (userId) => {
 exports.uploadArtwork = async (req, res) => {
   console.log("Received request to create artwork");
 
-  const { title, description, price } = req.body;
+  const { title, description, price, category } = req.body;
   const userId = req.user.id; // Get user ID from the authenticated user
   const imageUrl = req.file ? req.file.path : null; // Image uploaded via Multer
 
   console.log("Title:", title);
   console.log("Description:", description);
   console.log("Price:", price);
+  console.log("category :",category);
   console.log("User ID:", userId);
   console.log("Image URL:", imageUrl);
 
   // Validation: Check if all required fields are provided
-  if (!title || !description || !price || isNaN(price) || price <= 0) {
+  if (!title || !description || !price || isNaN(price) || price <= 0||!category) {
     return res.status(400).json({
-      error: "Title, description, and a valid price are required.",
+      error: "Title, description,category, and a valid price are required.",
     });
   }
 
@@ -47,13 +48,13 @@ exports.uploadArtwork = async (req, res) => {
     }
 
     // SQL query to insert the artwork into the database
-    const query = `INSERT INTO artworks (title, description, price, image_url, artist_id) 
-                   VALUES (?, ?, ?, ?, ?)`;
+    const query = `INSERT INTO artworks (title, description, price,category, image_url, artist_id) 
+                   VALUES (?, ?, ?, ?, ?,?)`;
 
     // Execute the query
     db.query(
       query,
-      [title, description, price, imageUrl, artistId],
+      [title, description, price, category,imageUrl, artistId],
       (error, results) => {
         if (error) {
           console.error("Error inserting artwork into the database:", error.message);
