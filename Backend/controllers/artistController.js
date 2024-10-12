@@ -1,58 +1,68 @@
 const db = require("../config/db");
 
-// Create a new artist
+// ========================== Create a new artist ==========================
+
 exports.joinArtist = (req, res) => {
   console.log("Received request to create artist");
 
-  // Destructure data from the request body
-  const { fullname, age, biography, address, phone,email } = req.body;
+  const { fullname, age, biography, address, phone, email } = req.body;
   const photo = req.file ? req.file.path : null; // From Multer
   const user_id = req.user.id; // From auth middleware
 
-  console.log(`in aritst Controller ${req.user.id}`)
+  console.log(`In artist Controller for user ID: ${req.user.id}`);
 
   // SQL query to insert the artist into the database
-  const query = `INSERT INTO Artists (fullname, age, biography, photo, address, phone,email,user_id) 
-                 VALUES (?, ?, ?, ?, ?, ?,?,?)`;
+  const query = `INSERT INTO artists (fullname, age, biography, photo, address, phone, email, user_id) 
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
 
   // Execute the query
-  db.query(
-    query,
-    [fullname, age, biography, photo, address, phone, email,user_id],
-    (error, results) => {
-      if (error) {
-        console.error("Error inserting artist into the database:", error.message);
-        return res.status(500).json({ error: error.message });
-      }
-      console.log("Artist created with ID:", results.insertId);
-      res.status(201).json({ message: "Artist created", artistId: results.insertId });
+  db.query(query, [fullname, age, biography, photo, address, phone, email, user_id], (error, results) => {
+    if (error) {
+      console.error("Error inserting artist into the database:", error.message);
+      return res.status(500).json({ error: error.message });
     }
-  );
+    console.log("Artist created with ID:", results.insertId);
+    res.status(201).json({ message: "Artist created", artistId: results.insertId });
+  });
 };
 
-// Fetch all artists
+// ========================== Fetch all artists with total artworks ==========================
+
 exports.getAllArtists = (req, res) => {
   console.log("Received request to get all artists");
 
-  // SQL query to fetch all artists
-  const query = "SELECT * FROM Artists";
+  // SQL query to fetch all artists along with the total number of artworks for each artist
+  const query = `
+    SELECT a.*, COUNT(artworks.artwork_id) AS total_artworks
+    FROM artists a
+    LEFT JOIN artworks ON a.artist_id = artworks.artist_id
+    GROUP BY a.artist_id
+  `;
 
   db.query(query, (error, results) => {
     if (error) {
       console.error("Error fetching artists from the database:", error.message);
       return res.status(500).json({ error: error.message });
     }
-    console.log("Fetched artists:", results);
+    console.log("Fetched artists with total artworks:", results);
     res.json(results);
   });
 };
 
-// Fetch an artist by ID
+// ========================== Fetch an artist by ID with total artworks ==========================
+
 exports.getArtistById = (req, res) => {
   const artistId = req.params.id;
   console.log(`Received request to get artist with ID: ${artistId}`);
 
-  const query = "SELECT * FROM Artists WHERE artist_id = ?";
+  // SQL query to fetch the artist and the total number of artworks they have created
+  const query = `
+    SELECT a.*, COUNT(artworks.artwork_id) AS total_artworks
+    FROM artists a
+    LEFT JOIN artworks ON a.artist_id = artworks.artist_id
+    WHERE a.artist_id = ?
+    GROUP BY a.artist_id
+  `;
 
   db.query(query, [artistId], (error, results) => {
     if (error) {
@@ -64,15 +74,16 @@ exports.getArtistById = (req, res) => {
       return res.status(404).json({ message: "Artist not found" });
     }
 
-    console.log("Fetched artist:", results[0]);
+    console.log("Fetched artist with total artworks:", results[0]);
     res.json(results[0]);
   });
 };
 
-// Delete an artist
+// ========================== Delete an artist ==========================
+
 const deleteArtistFromDb = async (artistId) => {
   return new Promise((resolve, reject) => {
-    const query = "DELETE FROM Artists WHERE artist_id = ?";
+    const query = "DELETE FROM artists WHERE artist_id = ?";
 
     db.query(query, [artistId], (error, results) => {
       if (error) {
@@ -90,7 +101,7 @@ const deleteArtistFromDb = async (artistId) => {
 
 const getArtistOwner = async (artistId) => {
   return new Promise((resolve, reject) => {
-    const query = "SELECT user_id FROM Artists WHERE artist_id = ?";
+    const query = "SELECT user_id FROM artists WHERE artist_id = ?";
 
     db.query(query, [artistId], (error, results) => {
       if (error) {
