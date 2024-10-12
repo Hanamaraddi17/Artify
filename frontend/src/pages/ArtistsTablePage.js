@@ -1,50 +1,44 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ChevronDown, ChevronUp, Search, Eye } from "lucide-react";
 
 const ArtistsTablePage = () => {
+  const [artists, setArtists] = useState([]);
   const [sortColumn, setSortColumn] = useState("");
   const [sortDirection, setSortDirection] = useState("asc");
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Dummy data for artists (replace with actual data fetching in your implementation)
-  const artists = [
-    {
-      id: 1,
-      fullName: "Akshay Kumar S",
-      email: "akshaykumars9108@gmail.com",
-      phoneNo: "9108083054",
-      artworksCount: 15,
-    },
-    {
-      id: 2,
-      fullName: "John Smith",
-      email: "john.smith@example.com",
-      phoneNo: "9108675054",
-      artworksCount: 8,
-    },
-    {
-      id: 3,
-      fullName: "Alice Johnson",
-      email: "alice.johnson@example.com",
-      phoneNo: "8768083054",
-      artworksCount: 22,
-    },
-    {
-      id: 4,
-      fullName: "Bob Williams",
-      email: "bob.williams@example.com",
-      phoneNo: "8768083098",
-      artworksCount: 5,
-    },
-    {
-      id: 5,
-      fullName: "Emma Brown",
-      email: "emma.brown@example.com",
-      phoneNo: "8768023454",
-      artworksCount: 12,
-    },
-  ];
+  // Fetch artists data from the backend
+  useEffect(() => {
+    const fetchArtists = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/artist/");
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        // Map backend data to frontend structure
+        const mappedArtists = data.map((artist) => ({
+          id: artist.artist_id,
+          fullName: artist.fullname,
+          email: artist.email || "N/A",
+          phoneNo: artist.phone,
+          artworksCount: artist.artworks_count || 0, // Assuming artworks_count is provided
+          photo: artist.photo,
+        }));
+        setArtists(mappedArtists);
+        setLoading(false);
+      } catch (err) {
+        console.error("Failed to fetch artists:", err);
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+
+    fetchArtists();
+  }, []);
 
   const handleSort = (column) => {
     if (sortColumn === column) {
@@ -66,6 +60,22 @@ const ArtistsTablePage = () => {
       artist.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       artist.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  if (loading) {
+    return (
+      <div className="bg-blue-100 min-h-screen flex items-center justify-center">
+        <p className="text-xl text-gray-700">Loading artists...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-blue-100 min-h-screen flex items-center justify-center">
+        <p className="text-xl text-red-500">Error: {error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-blue-100 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
@@ -169,6 +179,11 @@ const ArtistsTablePage = () => {
               ))}
             </tbody>
           </table>
+          {filteredArtists.length === 0 && (
+            <div className="p-4 text-center text-gray-500">
+              No artists found.
+            </div>
+          )}
         </div>
       </div>
     </div>

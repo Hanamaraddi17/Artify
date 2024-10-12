@@ -5,7 +5,7 @@ const db = require("../config/db");
 exports.joinArtist = (req, res) => {
   console.log("Received request to create artist");
 
-  const { fullname, age, biography, address, phone, email } = req.body;
+  const { fullname, age, biography, address, phone,  email } = req.body;
   const photo = req.file ? req.file.path : null; // From Multer
   const user_id = req.user.id; // From auth middleware
 
@@ -105,7 +105,9 @@ const getArtistOwner = async (artistId) => {
 
     db.query(query, [artistId], (error, results) => {
       if (error) {
-        return reject(new Error(`Error fetching artist owner: ${error.message}`));
+        return reject(
+          new Error(`Error fetching artist owner: ${error.message}`)
+        );
       }
 
       if (results.length === 0) {
@@ -133,7 +135,9 @@ exports.deleteArtist = async (req, res) => {
 
     // Check if the user is the owner of the artist profile
     if (userId !== ownerId) {
-      return res.status(403).json({ error: "You are not authorized to delete this artist" });
+      return res
+        .status(403)
+        .json({ error: "You are not authorized to delete this artist" });
     }
 
     // Delete the artist from the database
