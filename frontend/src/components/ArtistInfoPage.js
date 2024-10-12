@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   User,
   Mail,
@@ -8,20 +8,72 @@ import {
   FileText,
   Phone,
 } from "lucide-react";
+import { useParams } from "react-router-dom";
 
-const ArtistInfoPage = ({ artist }) => {
-  // Dummy data for the artist (replace with actual data in your implementation)
-  const artistData = {
-    userId: "art123",
-    fullName: "Akshay Kumar S",
-    email: "akshaykumars9108@gmail.com",
-    age: 21,
-    address: "Yadadi-Mathyadi Village, Kundapura Taluk, Udupi - 576222",
-    phoneNo: "9108083054",
-    photo: "/images/Akshay.jpeg",
-    biography:
-      "Akshay Kumar is a contemporary artist celebrated for his innovative approach to abstract painting, where he masterfully blends vibrant colors and dynamic forms to create visually arresting compositions. His work often draws inspiration from the natural world, human emotions, and the subtle interplay of light and shadow, resulting in pieces that evoke a sense of movement and energy. Kumar’s distinctive style combines both spontaneity and precision, as he employs bold brushstrokes, intricate layering, and textural techniques to give his paintings a unique depth.",
-  };
+const ArtistInfoPage = () => {
+  const { id } = useParams(); // Get artist ID from route parameters
+  const [artistData, setArtistData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch artist data from the backend
+  useEffect(() => {
+    const fetchArtist = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/artist/${id}`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        // Assuming the response is an object, not an array
+        const artist = {
+          userId: data.user_id || "N/A",
+          fullName: data.fullname,
+          email: data.email || "N/A",
+          age: data.age,
+          address: data.address,
+          phoneNo: data.phone,
+          photo: data.photo
+            ? `http://localhost:5000/${data.photo.replace(/\\/g, "/")}`
+            : "/images/default.jpeg", // Provide a default image if photo is null
+          biography: data.biography || "No biography available.",
+          artworks: data.artworks || [], // Assuming artworks are provided
+        };
+        setArtistData(artist);
+        setLoading(false);
+      } catch (err) {
+        console.error("Failed to fetch artist:", err);
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+
+    fetchArtist();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="bg-blue-100 min-h-screen flex items-center justify-center">
+        <p className="text-xl text-gray-700">Loading artist information...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-blue-100 min-h-screen flex items-center justify-center">
+        <p className="text-xl text-red-500">Error: {error}</p>
+      </div>
+    );
+  }
+
+  if (!artistData) {
+    return (
+      <div className="bg-blue-100 min-h-screen flex items-center justify-center">
+        <p className="text-xl text-gray-700">Artist not found.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-blue-100 min-h-screen py-12 px-4 sm:px-6 lg:px-8 transition-all duration-500 ease-in-out">
@@ -74,14 +126,27 @@ const ArtistInfoPage = ({ artist }) => {
             <Image className="mr-2 text-indigo-500" size={24} />
             Latest Artworks
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            {[1, 2, 3].map((i) => (
-              <div
-                key={i}
-                className="bg-gradient-to-br from-indigo-200 to-purple-200 h-40 rounded-lg animate-pulse transition-all duration-300 ease-in-out hover:shadow-md hover:scale-105"
-              ></div>
-            ))}
-          </div>
+          {artistData.artworks && artistData.artworks.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              {artistData.artworks.map((artwork) => (
+                <div
+                  key={artwork.id}
+                  className="bg-gradient-to-br from-indigo-200 to-purple-200 h-40 rounded-lg transition-all duration-300 ease-in-out hover:shadow-md hover:scale-105"
+                  style={{
+                    backgroundImage: `url(http://localhost:5000/${artwork.image.replace(
+                      /\\/g,
+                      "/"
+                    )})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }}
+                  title={artwork.title || "Untitled"}
+                ></div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-500">No artworks available.</p>
+          )}
         </div>
       </div>
     </div>

@@ -8,7 +8,7 @@ const upload = require("../config/multer/pfpUpload"); // Import the multer confi
 router.post(
   "/join",
   authMiddleware,
-  upload.single("profilePicture"),
+  upload.single("photo"),
   artistController.joinArtist
 );
 
