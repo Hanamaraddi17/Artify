@@ -9,7 +9,11 @@ const ArtworkCards = ({ imageUrl, title, artist, price, category, onLike }) => {
 
   return (
     <div className="max-w-sm rounded-2xl overflow-hidden shadow-lg bg-white transition-all duration-700 ease-in-out hover:-translate-y-4 hover:shadow-2xl relative group">
-      <img className="w-full h-64 object-cover" src={formattedImageUrl} alt={title} /> 
+      <img
+        className="w-full h-64 object-cover"
+        src={formattedImageUrl}
+        alt={title}
+      />
       <div className="px-6 py-4">
         <h2 className="font-bold text-xl mb-2">{title}</h2>
         <p className="text-gray-700 text-base mb-2">by {artist}</p>
@@ -31,7 +35,10 @@ const ArtworkCards = ({ imageUrl, title, artist, price, category, onLike }) => {
             aria-label="Share artwork"
             className="w-10 h-10 flex items-center justify-center bg-green-100 rounded-full transition-all duration-300 hover:bg-green-500 group"
           >
-            <Share2 size={25} className="text-green-500 group-hover:text-white" />
+            <Share2
+              size={25}
+              className="text-green-500 group-hover:text-white"
+            />
           </button>
         </div>
       </div>

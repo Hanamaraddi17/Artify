@@ -78,12 +78,15 @@ const GalleryPage = () => {
 
   const handleLikeArtwork = async (artworkId) => {
     try {
-      const response = await fetch(`http://localhost:5000/artworks/like/${artworkId}`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        `http://localhost:5000/artworks/like/${artworkId}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (response.ok) {
         alert("Artwork liked successfully!");
