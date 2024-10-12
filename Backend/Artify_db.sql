@@ -8,6 +8,8 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+desc users;
+
 CREATE TABLE artists (
     artist_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     fullname VARCHAR(100) NOT NULL,
@@ -22,6 +24,7 @@ CREATE TABLE artists (
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
+desc artists;
 
 CREATE TABLE artworks (
     artwork_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -30,10 +33,13 @@ CREATE TABLE artworks (
     description TEXT,
     price DECIMAL(10,2),
     artist_id INT,
+    category varchar(30) NOT NUll,
     likes INT DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (artist_id) REFERENCES artists(artist_id) ON DELETE CASCADE
 );
+
+desc artworks;
 
 CREATE TABLE cart (
     cart_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -44,6 +50,8 @@ CREATE TABLE cart (
     FOREIGN KEY (artwork_id) REFERENCES artworks(artwork_id) ON DELETE CASCADE
 );
 
+desc cart;
+
 CREATE TABLE wishlist (
     wishlist_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
@@ -51,6 +59,8 @@ CREATE TABLE wishlist (
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
     FOREIGN KEY (artwork_id) REFERENCES artworks(artwork_id) ON DELETE CASCADE
 );
+
+desc wishlist;
 
 CREATE TABLE orders (
     order_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -62,3 +72,5 @@ CREATE TABLE orders (
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
     FOREIGN KEY (artwork_id) REFERENCES artworks(artwork_id) ON DELETE CASCADE
 );
+
+desc orders;
