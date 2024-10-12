@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react"; 
+import React, { useState, useEffect } from "react";
 import ArtworkCards from "../components/ArtworkCards";
 import { Search, Upload } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const GalleryPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -13,6 +14,7 @@ const GalleryPage = () => {
     image: null,
   });
   const [token, setToken] = useState(""); // Initialize token as an empty string
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Retrieve the token from local storage
@@ -49,31 +51,7 @@ const GalleryPage = () => {
   };
 
   const handleUploadClick = async () => {
-    const formData = new FormData();
-    formData.append("title", uploadData.title);
-    formData.append("description", uploadData.description);
-    formData.append("price", uploadData.price);
-    formData.append("artworks", uploadData.image);
-
-    try {
-      const response = await fetch("http://localhost:5000/artworks/upload", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
-      });
-
-      if (response.ok) {
-        alert("Artwork uploaded successfully!");
-        setUploadData({ title: "", description: "", price: "", image: null }); // Reset upload data
-        fetchArtworks(); // Refresh artworks list
-      } else {
-        alert("Failed to upload artwork.");
-      }
-    } catch (error) {
-      console.error("Error uploading artwork:", error);
-    }
+    navigate("/uploadArtwork");
   };
 
   const handleLikeArtwork = async (artworkId) => {
