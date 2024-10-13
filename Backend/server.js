@@ -10,6 +10,7 @@ const artworkRoutes = require("./routes/artworkRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const cartRoutes = require("./routes/cartRoutes");
 const artistRoutes = require("./routes/artistRoutes");
+const contactRoutes = require("./routes/contactRoutes");
 
 const app = express();
 
@@ -37,6 +38,7 @@ app.use("/artworks", artworkRoutes);
 app.use("/orders", orderRoutes);
 app.use("/cart", cartRoutes);
 app.use("/artist", artistRoutes);
+app.use("/contact", contactRoutes);
 
 // Define the port from environment variables or use 5000 as a fallback
 const PORT = process.env.PORT || 5000;
