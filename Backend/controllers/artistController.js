@@ -16,7 +16,7 @@ exports.joinArtist = (req, res) => {
                  VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
 
   // Execute the query
-  db.query( 
+  db.query(
     query,
     [fullname, age, biography, photo, address, phone, email, user_id],
     (error, results) => {
@@ -72,11 +72,13 @@ exports.getArtistById = (req, res) => {
     GROUP BY a.artist_id
   `;
 
-  // Second query to fetch all artworks of the artist
+  // Query to fetch the last 3 uploaded artworks of the artist
   const artworksQuery = `
     SELECT * FROM artworks
     WHERE artist_id = ?
-  `;
+    ORDER BY created_at DESC
+    LIMIT 3
+`;
 
   db.query(artistQuery, [artistId], (error, artistResults) => {
     if (error) {
@@ -108,7 +110,9 @@ exports.getArtistById = (req, res) => {
 exports.checkIfArtist = (req, res) => {
   const userId = req.user.id; // User ID is taken from the authenticated user (via JWT or session)
 
-  console.log(`Received request to check if user with ID: ${userId} is an artist`);
+  console.log(
+    `Received request to check if user with ID: ${userId} is an artist`
+  );
 
   // SQL query to check if the user has an artist profile
   const query = "SELECT artist_id FROM artists WHERE user_id = ?";
@@ -130,7 +134,6 @@ exports.checkIfArtist = (req, res) => {
     res.json({ isArtist: true, artistId: results[0].artist_id });
   });
 };
-
 
 // ========================== Delete an artist ==========================
 

@@ -14,16 +14,19 @@ const GalleryPage = () => {
     image: null,
   });
   const [token, setToken] = useState(""); // Initialize token as an empty string
+  const [isArtist, setIsArtist] = useState(false); // State to track if user is an artist
+  const [showModal, setShowModal] = useState(false); // State for modal visibility
   const navigate = useNavigate();
 
   useEffect(() => {
     // Retrieve the token from local storage
-    const storedToken = localStorage.getItem("token");
+    const storedToken = localStorage.getItem("authToken");
     if (storedToken) {
       setToken(storedToken);
     }
 
     fetchArtworks(); // Fetch artworks after setting the token
+    checkArtistStatus(); // Check if the user is an artist
   }, [token]);
 
   useEffect(() => {
@@ -50,16 +53,40 @@ const GalleryPage = () => {
     }
   };
 
-  const handleUploadClick = async () => {
-    navigate("/uploadArtwork");
+  const checkArtistStatus = async () => {
+    if (!token) return;
+    try {
+      const response = await fetch(
+        "http://localhost:5000/artist/check/artist",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+      setIsArtist(data.isArtist); // Assuming API returns { isArtist: true/false }
+    } catch (error) {
+      console.error("Error checking artist status:", error);
+    }
+  };
+
+  const handleUploadClick = () => {
+    if (isArtist) {
+      navigate("/uploadArtwork");
+    } else {
+      setShowModal(true); // Show modal if not an artist
+    }
   };
 
   const handleLikeArtwork = async (artworkId) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/artworks/like/${artworkId}`,
+        `http://localhost:5000/artworks/${artworkId}/like`,
         {
-          method: "POST",
+          method: "PATCH",
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -75,6 +102,10 @@ const GalleryPage = () => {
     } catch (error) {
       console.error("Error liking artwork:", error);
     }
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
   };
 
   return (
@@ -120,16 +151,35 @@ const GalleryPage = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredArtworks.map((artwork) => (
           <ArtworkCards
-            key={artwork.artwork_id} // Use artwork_id instead of id
-            imageUrl={artwork.image_url} // Use image_url instead of image
+            key={artwork.artwork_id}
+            imageUrl={artwork.image_url}
             title={artwork.title}
-            artist={artwork.artist} // Ensure artist data is correct
+            artist={artwork.artist_name}
             price={artwork.price}
             category={artwork.category}
-            onLike={() => handleLikeArtwork(artwork.artwork_id)} // Pass like handler
+            onLike={() => handleLikeArtwork(artwork.artwork_id)}
           />
         ))}
       </div>
+
+      {/* Modal for Non-Artists */}
+      {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <p className="text-lg text-center">
+              Join as an artist to upload your artworks!
+            </p>
+            <div className="flex justify-center mt-4">
+              <button
+                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+                onClick={closeModal}
+              >
+                OK
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
