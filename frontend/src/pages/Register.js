@@ -14,7 +14,7 @@ const validateEmail = (email) => {
 const LoginComponent = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState(""); 
+  const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
@@ -54,6 +54,7 @@ const LoginComponent = () => {
         setTimeout(() => {
           setShowModal(false);
           navigate("/"); // Redirect to Home page
+          window.location.reload();
         }, 2000);
       } else {
         setErrorMessage("Login failed: " + data.message);

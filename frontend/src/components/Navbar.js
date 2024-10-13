@@ -1,14 +1,32 @@
-import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
-import UserProfileDropdown from "./UserProfileDropdown"; // Import the new component
+import UserProfileDropdown from "./UserProfileDropdown";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  // Get the current path
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false); // State for logout modal
   const location = useLocation();
   const currentPath = location.pathname;
+  const navigate = useNavigate();
+
+  // Check if user is logged in by checking auth token in local storage
+  useEffect(() => {
+    const authToken = localStorage.getItem("authToken");
+    setIsLoggedIn(!!authToken);
+  }, []);
+
+  // Handle logout
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    setIsLoggedIn(false);
+    setShowLogoutModal(true); // Show logout modal
+    setTimeout(() => {
+      setShowLogoutModal(false); // Hide modal after 2 seconds
+      navigate("/"); // Redirect to the Home page after logout
+    }, 2000);
+  };
 
   return (
     <nav className="bg-white shadow-lg sticky top-0 z-50">
@@ -43,7 +61,6 @@ const Navbar = () => {
             isMobileMenuOpen ? "block" : "hidden"
           } md:flex space-x-6`}
         >
-          {/* ... (rest of the navigation links remain unchanged) ... */}
           <a
             href="/"
             className={`${
@@ -87,18 +104,35 @@ const Navbar = () => {
           </a>
         </div>
 
-        {/* Sign up and Profile buttons */}
+        {/* Sign up/Logout and Profile buttons */}
         <div className="space-x-4 flex items-center">
-          <a
-            href="/signup"
-            className="bg-blue-100 text-blue-500 px-6 py-2 rounded-full hover:bg-blue-200 transition-colors duration-300"
-          >
-            Sign Up
-          </a>
-          <UserProfileDropdown />{" "}
-          {/* Replace the Profile button with UserProfileDropdown */}
+          {isLoggedIn ? (
+            <button
+              onClick={handleLogout}
+              className="bg-red-100 text-red-500 px-6 py-2 rounded-full hover:bg-red-200 transition-colors duration-300"
+            >
+              Logout
+            </button>
+          ) : (
+            <a
+              href="/signup"
+              className="bg-blue-100 text-blue-500 px-6 py-2 rounded-full hover:bg-blue-200 transition-colors duration-300"
+            >
+              Sign Up
+            </a>
+          )}
+          <UserProfileDropdown />
         </div>
       </div>
+
+      {/* Logout Modal */}
+      {showLogoutModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <p className="text-blue-900 font-bold">Logged out successfully!</p>
+          </div>
+        </div>
+      )}
     </nav>
   );
 };
