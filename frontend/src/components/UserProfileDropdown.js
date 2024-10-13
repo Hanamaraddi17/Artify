@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   User,
   ShoppingCart,
@@ -8,12 +8,26 @@ import {
   X,
   LogOut,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const UserProfileDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [modalContent, setModalContent] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const navigate = useNavigate();
 
-  const toggleDropdown = () => setIsOpen(!isOpen);
+  useEffect(() => {
+    const authToken = localStorage.getItem("authToken");
+    setIsLoggedIn(!!authToken);
+  }, []);
+
+  const toggleDropdown = () => {
+    if (!isLoggedIn) {
+      alert("First log in to see your profile");
+    }
+    setIsOpen(!isOpen);
+  };
 
   const openModal = (content) => {
     setModalContent(content);
@@ -22,6 +36,18 @@ const UserProfileDropdown = () => {
 
   const closeModal = () => {
     setModalContent(null);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("username");
+    setIsLoggedIn(false);
+    setShowLogoutModal(true); // Show logout modal
+    setTimeout(() => {
+      setShowLogoutModal(false); // Hide modal after 2 seconds
+      navigate("/login"); // Redirect to the Home page after logout
+      window.location.reload();
+    }, 2000);
   };
 
   return (
@@ -40,7 +66,7 @@ const UserProfileDropdown = () => {
         />
       </button>
 
-      {isOpen && (
+      {isOpen && isLoggedIn && (
         <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 animate-fadeIn">
           <button
             onClick={() => openModal("personal")}
@@ -67,7 +93,7 @@ const UserProfileDropdown = () => {
             <Heart size={16} className="inline-block mr-2" /> Wishlist
           </button>
           <button
-            onClick={toggleDropdown}
+            onClick={handleLogout}
             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
           >
             <LogOut size={16} className="inline-block mr-2" /> Logout
@@ -90,6 +116,14 @@ const UserProfileDropdown = () => {
               </button>
             </div>
             <p>{getModalContent(modalContent)}</p>
+          </div>
+        </div>
+      )}
+      {/* Logout Modal */}
+      {showLogoutModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <p className="text-blue-900 font-bold">Logged out successfully!</p>
           </div>
         </div>
       )}
