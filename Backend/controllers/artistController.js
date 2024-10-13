@@ -16,7 +16,7 @@ exports.joinArtist = (req, res) => {
                  VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
 
   // Execute the query
-  db.query(
+  db.query( 
     query,
     [fullname, age, biography, photo, address, phone, email, user_id],
     (error, results) => {
@@ -58,14 +58,13 @@ exports.getAllArtists = (req, res) => {
   });
 };
 
-// ========================== Fetch an artist by ID with total artworks ==========================
+// ========================== Fetch an artist by ID with total artworks and all artworks ==========================
 
 exports.getArtistById = (req, res) => {
   const artistId = req.params.id;
-  console.log(`Received request to get artist with ID: ${artistId}`);
 
-  // SQL query to fetch the artist and the total number of artworks they have created
-  const query = `
+  // First query to fetch artist's basic information and the total number of artworks
+  const artistQuery = `
     SELECT a.*, COUNT(artworks.artwork_id) AS total_artworks
     FROM artists a
     LEFT JOIN artworks ON a.artist_id = artworks.artist_id
@@ -73,20 +72,65 @@ exports.getArtistById = (req, res) => {
     GROUP BY a.artist_id
   `;
 
-  db.query(query, [artistId], (error, results) => {
+  // Second query to fetch all artworks of the artist
+  const artworksQuery = `
+    SELECT * FROM artworks
+    WHERE artist_id = ?
+  `;
+
+  db.query(artistQuery, [artistId], (error, artistResults) => {
     if (error) {
       console.error("Error fetching artist:", error.message);
       return res.status(500).json({ error: error.message });
     }
 
-    if (results.length === 0) {
+    if (artistResults.length === 0) {
       return res.status(404).json({ message: "Artist not found" });
     }
 
-    console.log("Fetched artist with total artworks:", results[0]);
-    res.json(results[0]);
+    const artistData = artistResults[0]; // Artist data with total artworks
+
+    // Fetch all artworks of the artist
+    db.query(artworksQuery, [artistId], (error, artworksResults) => {
+      if (error) {
+        console.error("Error fetching artworks:", error.message);
+        return res.status(500).json({ error: error.message });
+      }
+
+      artistData.artworks = artworksResults; // Attach artworks to artist data
+      res.json(artistData); // Return artist data with artworks
+    });
   });
 };
+
+// ========================== Check if the current user is an artist ==========================
+
+exports.checkIfArtist = (req, res) => {
+  const userId = req.user.id; // User ID is taken from the authenticated user (via JWT or session)
+
+  console.log(`Received request to check if user with ID: ${userId} is an artist`);
+
+  // SQL query to check if the user has an artist profile
+  const query = "SELECT artist_id FROM artists WHERE user_id = ?";
+
+  db.query(query, [userId], (error, results) => {
+    if (error) {
+      console.error("Error checking if user is an artist:", error.message);
+      return res.status(500).json({ error: error.message });
+    }
+
+    if (results.length === 0) {
+      // If no artist profile is found for this user
+      console.log(`User with ID ${userId} is not an artist`);
+      return res.json({ isArtist: false, message: "User is not an artist" });
+    }
+
+    // If the user has an artist profile
+    console.log(`User with ID ${userId} is an artist`);
+    res.json({ isArtist: true, artistId: results[0].artist_id });
+  });
+};
+
 
 // ========================== Delete an artist ==========================
 

@@ -62,6 +62,17 @@ CREATE TABLE wishlist (
 
 desc wishlist;
 
+CREATE TABLE likes (
+    like_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    artwork_id INT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (artwork_id) REFERENCES artworks(artwork_id) ON DELETE CASCADE,
+    UNIQUE KEY (user_id, artwork_id) -- Ensure a user can like the same artwork only once
+);
+
+desc likes
+
 CREATE TABLE orders (
     order_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     user_id INT,

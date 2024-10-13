@@ -8,7 +8,7 @@ const upload = require("../config/multer/pfpUpload"); // Import the multer confi
 router.post(
   "/join",
   authMiddleware,
-  upload.single("photo"),
+  upload.single("photo"), 
   artistController.joinArtist
 );
 
@@ -23,5 +23,9 @@ router.get("/", artistController.getAllArtists);
 
 // Route to delete an artist account
 router.delete("/:id", authMiddleware, artistController.deleteArtist);
+
+
+// New route to check if the current user is an artist
+router.get("/check/artist", authMiddleware, artistController.checkIfArtist); // New route to check if user is artist
 
 module.exports = router;
