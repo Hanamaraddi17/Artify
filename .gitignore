@@ -4,6 +4,9 @@ node_modules/
 #ignore uplods;
 uploads/
 
+#ignore data
+data/
+
 # Logs
 logs/
 *.log

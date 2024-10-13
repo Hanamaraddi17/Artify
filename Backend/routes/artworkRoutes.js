@@ -21,7 +21,7 @@ router.get("/", artworkController.fetchArtworks);
 router.delete("/:id", authMiddleware, artworkController.deleteArtwork);
 
 // Increment like count for an artwork
-router.patch("/:id/like", authMiddleware, artworkController.likeArtwork);
+router.patch("/:id/like", authMiddleware, artworkController.toggleLikeArtwork);
 
 
 router.patch("/:id/unlike", authMiddleware, artworkController.unlikeArtwork);

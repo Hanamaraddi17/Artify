@@ -300,6 +300,73 @@ exports.unlikeArtwork = (req, res) => {
   });
 };
 
+
+exports.toggleLikeArtwork = (req, res) => {
+  const artworkId = req.params.id; // Get the artwork ID from the request parameters
+  const userId = req.user.id; // Assuming user ID is available in req.user
+
+  console.log(`Received request to toggle like for artwork ID: ${artworkId} by user ID: ${userId}`);
+
+  // Check if the user has already liked the artwork
+  const checkLikeQuery = `SELECT COUNT(*) AS liked FROM likes WHERE artwork_id = ? AND user_id = ?`;
+
+  db.query(checkLikeQuery, [artworkId, userId], (error, results) => {
+    if (error) {
+      console.error("Error checking like status:", error.message);
+      return res.status(500).json({ error: error.message });
+    }
+
+    if (results[0].liked > 0) {
+      // User has already liked the artwork, so we unlike it
+      const deleteLikeQuery = `DELETE FROM likes WHERE artwork_id = ? AND user_id = ?`;
+
+      db.query(deleteLikeQuery, [artworkId, userId], (error) => {
+        if (error) {
+          console.error("Error removing like:", error.message);
+          return res.status(500).json({ error: error.message });
+        }
+
+        // Decrement the likes count for the artwork
+        const updateLikesQuery = `UPDATE artworks SET likes = likes - 1 WHERE artwork_id = ?`;
+
+        db.query(updateLikesQuery, [artworkId], (error) => {
+          if (error) {
+            console.error("Error updating like count:", error.message);
+            return res.status(500).json({ error: error.message });
+          }
+
+          console.log("Artwork unliked successfully:", artworkId);
+          return res.status(200).json({ message: "Artwork unliked successfully.", liked: false });
+        });
+      });
+    } else {
+      // User hasn't liked the artwork, so we add a like
+      const insertLikeQuery = `INSERT INTO likes (user_id, artwork_id) VALUES (?, ?)`;
+
+      db.query(insertLikeQuery, [userId, artworkId], (error) => {
+        if (error) {
+          console.error("Error adding like:", error.message);
+          return res.status(500).json({ error: error.message });
+        }
+
+        // Increment the likes count for the artwork
+        const updateLikesQuery = `UPDATE artworks SET likes = likes + 1 WHERE artwork_id = ?`;
+
+        db.query(updateLikesQuery, [artworkId], (error) => {
+          if (error) {
+            console.error("Error updating like count:", error.message);
+            return res.status(500).json({ error: error.message });
+          }
+
+          console.log("Artwork liked successfully:", artworkId);
+          return res.status(200).json({ message: "Artwork liked successfully.", liked: true });
+        });
+      });
+    }
+  });
+};
+
+
 // ========================== Get liked items for a specific user ==========================
 
 exports.getLikedItems = (req, res) => {
