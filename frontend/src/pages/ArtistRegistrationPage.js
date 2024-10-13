@@ -264,11 +264,23 @@ export default function ArtistRegistrationPage() {
               <div className="flex items-center justify-center w-full">
                 <label className="flex flex-col w-full h-20 border-2 border-dashed border-blue-400 hover:border-blue-600 rounded-lg cursor-pointer transition-all">
                   <div className="flex flex-col items-center justify-center pt-2">
+                    {uploadedFileName ? (
+                      <p className="text-gray-700">{uploadedFileName}</p> // Show file name
+                    ) : (
+                      <>
+                        <Upload className="w-8 h-8 text-gray-400" />
+                        <p className="pt-1 text-sm tracking-wider text-gray-400">
+                          Upload your profile photo
+                        </p>
+                      </>
+                    )}
+                  </div>
+                  {/* <div className="flex flex-col items-center justify-center pt-2">
                     <Upload className="w-8 h-8 text-gray-400 group-hover:text-gray-600" />
                     <p className="pt-1 text-sm tracking-wider text-gray-400 group-hover:text-gray-600">
                       Upload your profile photo
                     </p>
-                  </div>
+                  </div> */}
                   <input
                     type="file"
                     className="opacity-0"
@@ -282,13 +294,13 @@ export default function ArtistRegistrationPage() {
           </div>
 
           {/* Uploaded File Name Display */}
-          {uploadedFileName && (
+          {/* {uploadedFileName && (
             <div className="mt-2 text-center">
               <p className="text-sm text-gray-700">
                 <strong>Selected File:</strong> {uploadedFileName}
               </p>
             </div>
-          )}
+          )} */}
 
           {/* Submit Button */}
           <div className="flex justify-center">

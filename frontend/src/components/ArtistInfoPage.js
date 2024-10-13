@@ -25,7 +25,6 @@ const ArtistInfoPage = () => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        // Assuming the response is an object, not an array
         const artist = {
           userId: data.user_id || "N/A",
           fullName: data.fullname,
@@ -80,7 +79,7 @@ const ArtistInfoPage = () => {
       <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden transition-all duration-300 ease-in-out hover:shadow-2xl">
         <div className="md:flex">
           <div className="md:flex-shrink-0">
-            {console.log("artist image :",artistData.photo)}
+            {console.log("artist image :", artistData.photo)}
             <img
               className="h-56 w-full object-cover md:w-48 transition-transform duration-300 ease-in-out hover:scale-105"
               src={artistData.photo}
@@ -131,13 +130,13 @@ const ArtistInfoPage = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               {artistData.artworks.map((artwork) => (
                 <div
-                  key={artwork.id}
+                  key={artwork.artwork_id} // Changed to artwork.artwork_id
                   className="bg-gradient-to-br from-indigo-200 to-purple-200 h-40 rounded-lg transition-all duration-300 ease-in-out hover:shadow-md hover:scale-105"
                   style={{
-                    backgroundImage: `url(http://localhost:5000/${artwork.image.replace(
+                    backgroundImage: `url(http://localhost:5000/${artwork.image_url.replace(
                       /\\/g,
                       "/"
-                    )})`,
+                    )})`, // Changed to artwork.image_url
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                   }}

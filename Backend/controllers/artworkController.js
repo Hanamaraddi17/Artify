@@ -6,7 +6,9 @@ const isArtist = (userId) => {
     const query = "SELECT artist_id FROM artists WHERE user_id = ?";
     db.query(query, [userId], (error, results) => {
       if (error) {
-        return reject(new Error("Error checking artist status: " + error.message));
+        return reject(
+          new Error("Error checking artist status: " + error.message)
+        );
       }
       if (results.length === 0) {
         return resolve(false); // User is not an artist
@@ -27,12 +29,19 @@ exports.uploadArtwork = async (req, res) => {
   console.log("Title:", title);
   console.log("Description:", description);
   console.log("Price:", price);
-  console.log("category :",category);
+  console.log("category :", category);
   console.log("User ID:", userId);
   console.log("Image URL:", imageUrl);
 
   // Validation: Check if all required fields are provided
-  if (!title || !description || !price || isNaN(price) || price <= 0||!category) {
+  if (
+    !title ||
+    !description ||
+    !price ||
+    isNaN(price) ||
+    price <= 0 ||
+    !category
+  ) {
     return res.status(400).json({
       error: "Title, description,category, and a valid price are required.",
     });
@@ -54,14 +63,19 @@ exports.uploadArtwork = async (req, res) => {
     // Execute the query
     db.query(
       query,
-      [title, description, price, category,imageUrl, artistId],
+      [title, description, price, category, imageUrl, artistId],
       (error, results) => {
         if (error) {
-          console.error("Error inserting artwork into the database:", error.message);
+          console.error(
+            "Error inserting artwork into the database:",
+            error.message
+          );
           return res.status(500).json({ error: error.message });
         }
         console.log("Artwork created with ID:", results.insertId);
-        res.status(201).json({ message: "Artwork created", artworkId: results.insertId });
+        res
+          .status(201)
+          .json({ message: "Artwork created", artworkId: results.insertId });
       }
     );
   } catch (error) {
@@ -75,8 +89,12 @@ exports.uploadArtwork = async (req, res) => {
 exports.fetchArtworks = (req, res) => {
   console.log("Received request to get all artworks");
 
-  // SQL query to fetch all artworks from the database
-  const query = "SELECT * FROM artworks";
+  // SQL query to fetch all artworks along with the artist name
+  const query = `
+    SELECT artworks.*, artists.fullname AS artist_name
+    FROM artworks
+    JOIN artists ON artworks.artist_id = artists.artist_id
+  `;
 
   db.query(query, (error, results) => {
     if (error) {
@@ -86,9 +104,11 @@ exports.fetchArtworks = (req, res) => {
       );
       return res.status(500).json({ error: error.message });
     }
+
     console.log("Fetched artworks:", results);
+
     res.json(results);
-  }); 
+  });
 };
 
 // ===========================  Fetch artwork by ID ============================
@@ -214,11 +234,13 @@ exports.likeArtwork = (req, res) => {
   const artworkId = req.params.id; // Get the artwork ID from the request parameters
   const userId = req.user.id; // Assuming user ID is available in req.user
 
-  console.log(`Received request to like artwork with ID: ${artworkId} by user ID: ${userId}`);
+  console.log(
+    `Received request to like artwork with ID: ${artworkId} by user ID: ${userId}`
+  );
 
   // Check if the user has already liked the artwork
   const checkLikeQuery = `SELECT COUNT(*) AS liked FROM likes WHERE artwork_id = ? AND user_id = ?`;
-  
+
   db.query(checkLikeQuery, [artworkId, userId], (error, results) => {
     if (error) {
       console.error("Error checking like status:", error.message);
@@ -226,12 +248,14 @@ exports.likeArtwork = (req, res) => {
     }
 
     if (results[0].liked > 0) {
-      return res.status(400).json({ message: "You have already liked this artwork." });
+      return res
+        .status(400)
+        .json({ message: "You have already liked this artwork." });
     }
 
     // Add the like to the likes table
     const insertLikeQuery = `INSERT INTO likes (user_id, artwork_id) VALUES (?, ?)`;
-    
+
     db.query(insertLikeQuery, [userId, artworkId], (error) => {
       if (error) {
         console.error("Error adding like:", error.message);
@@ -260,11 +284,13 @@ exports.unlikeArtwork = (req, res) => {
   const artworkId = req.params.id; // Get the artwork ID from the request parameters
   const userId = req.user.id; // Assuming user ID is available in req.user
 
-  console.log(`Received request to unlike artwork with ID: ${artworkId} by user ID: ${userId}`);
+  console.log(
+    `Received request to unlike artwork with ID: ${artworkId} by user ID: ${userId}`
+  );
 
   // Check if the user has liked the artwork
   const checkLikeQuery = `SELECT COUNT(*) AS liked FROM likes WHERE artwork_id = ? AND user_id = ?`;
-  
+
   db.query(checkLikeQuery, [artworkId, userId], (error, results) => {
     if (error) {
       console.error("Error checking like status:", error.message);
@@ -272,12 +298,14 @@ exports.unlikeArtwork = (req, res) => {
     }
 
     if (results[0].liked === 0) {
-      return res.status(400).json({ message: "You haven't liked this artwork yet." });
+      return res
+        .status(400)
+        .json({ message: "You haven't liked this artwork yet." });
     }
 
     // Remove the like from the likes table
     const deleteLikeQuery = `DELETE FROM likes WHERE artwork_id = ? AND user_id = ?`;
-    
+
     db.query(deleteLikeQuery, [artworkId, userId], (error) => {
       if (error) {
         console.error("Error removing like:", error.message);
@@ -323,7 +351,9 @@ exports.getLikedItems = (req, res) => {
     console.log("Query Results:", results); // Add this line for debugging
 
     if (results.length === 0) {
-      return res.status(404).json({ message: "No liked items found for this user." });
+      return res
+        .status(404)
+        .json({ message: "No liked items found for this user." });
     }
 
     console.log("Fetched liked items for user ID:", userId);

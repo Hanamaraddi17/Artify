@@ -20,11 +20,13 @@ const Navbar = () => {
   // Handle logout
   const handleLogout = () => {
     localStorage.removeItem("authToken");
+    localStorage.removeItem("username");
     setIsLoggedIn(false);
     setShowLogoutModal(true); // Show logout modal
     setTimeout(() => {
       setShowLogoutModal(false); // Hide modal after 2 seconds
-      navigate("/"); // Redirect to the Home page after logout
+      navigate("/login"); // Redirect to the Home page after logout
+      window.location.reload();
     }, 2000);
   };
 

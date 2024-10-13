@@ -47,8 +47,10 @@ const LoginComponent = () => {
       });
 
       const data = await response.json();
+
       if (data.token) {
         localStorage.setItem("authToken", data.token);
+        localStorage.setItem("username", data.username);
 
         setShowModal(true);
         setTimeout(() => {

@@ -25,7 +25,7 @@ const ArtistsTablePage = () => {
           fullName: artist.fullname,
           email: artist.email || "N/A",
           phoneNo: artist.phone,
-          artworksCount: artist.artworks_count || 0, // Assuming artworks_count is provided
+          artworksCount: artist.total_artworks || 0, // Assuming artworks_count is provided
           photo: artist.photo,
         }));
         setArtists(mappedArtists);
