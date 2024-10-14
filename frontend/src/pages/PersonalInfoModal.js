@@ -76,8 +76,11 @@ const PersonalInfoModal = () => {
         <Info size={20} className="text-purple-500 mr-2" />
         <h3 className="text-md font-semibold">User Type:</h3>
         <p className="ml-2">{isArtist ? "Artist" : "Regular User"}</p>
-        <Trash size={20} className="ml-36 bg-red-500 text-white" />
       </div>
+      <button className="flex items-center bg-red-500 ml-20 text-white p-1 rounded-sm">
+        <span className="text-sm">Delete Account</span>
+        <Trash size={18} className="ml-2" />
+      </button>
     </div>
   );
 };
