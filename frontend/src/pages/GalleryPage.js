@@ -171,9 +171,10 @@ const GalleryPage = () => {
               title={artwork.title}
               artist={artwork.artist_name}
               price={artwork.price}
-              // onLike={() => handleLike(artwork.artwork_id)}
               category={artwork.category}
               initialIsLiked={artwork.isLiked} // Ensure backend provides isLiked
+              likes={artwork.likes}
+              fetchArt={fetchArtworks} // Pass the fetchArtworks function directly
             />
           ))
         ) : (

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Heart } from "lucide-react";
 
-const Wishlist = () => {
+const WishlistModal = () => {
   const [likedArtworks, setLikedArtworks] = useState([]);
 
   const fetchLikedArtworks = async () => {
@@ -77,16 +77,15 @@ const Wishlist = () => {
       ? `http://localhost:5000/${imageUrl.replace(/\\/g, "/")}` // Replace backslashes with forward slashes
       : "/images/default.jpeg"; // Provide a default image if photo is null
   };
-
+  // fixed right-0 top-1/2 transform -translate-y-1/2 w-96 max-h-96 bg-white shadow-lg p-4 overflow-y-auto z-50 rounded-lg
   return (
-    <div className="fixed right-0 top-1/2 transform -translate-y-1/2 w-1/4 h-1/2 bg-white shadow-lg p-4 overflow-y-auto z-50">
-      <h2 className="text-lg font-bold mb-4">Your Wishlist</h2>
-      <div className="flex flex-col space-y-4">
+    <div>
+      <div className="flex flex-col space-y-4 ">
         {likedArtworks.length > 0 ? (
           likedArtworks.map((artwork) => (
             <div
               key={artwork.artwork_id}
-              className="flex items-start border border-gray-300 rounded-lg p-4 bg-gray-100"
+              className="flex items-start border border-gray-300 rounded-lg p-3 bg-gray-100"
             >
               <img
                 src={getFormattedImageUrl(artwork.image_url)} // Format the image URL here
@@ -118,4 +117,4 @@ const Wishlist = () => {
   );
 };
 
-export default Wishlist;
+export default WishlistModal;

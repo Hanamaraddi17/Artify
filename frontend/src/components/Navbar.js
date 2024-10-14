@@ -123,7 +123,7 @@ const Navbar = () => {
               Sign Up
             </a>
           )}
-          <UserProfileDropdown />
+          {isLoggedIn && <UserProfileDropdown />}
         </div>
       </div>
 

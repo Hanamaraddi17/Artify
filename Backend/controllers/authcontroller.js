@@ -78,7 +78,7 @@ exports.login = async (req, res) => {
     );
 
     // Include username in the response
-    res.json({ token, username: user.username });
+    res.json({ token, username: user.username, email: user.email });
   });
 };
 

@@ -1,4 +1,4 @@
-import { React, useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Heart, Share2, ShoppingCart, CreditCard } from "lucide-react";
 
 const ArtworkCards = ({
@@ -10,6 +10,7 @@ const ArtworkCards = ({
   likes,
   category,
   initialIsLiked, // Use initialIsLiked for setting initial state
+  fetchArt,
 }) => {
   // Correct the image URL format
   const formattedImageUrl = imageUrl
@@ -21,6 +22,7 @@ const ArtworkCards = ({
   // Set isLiked based on initialIsLiked directly
   const [isLiked, setIsLiked] = useState(initialIsLiked); // Assume 1 means liked, 0 means not liked
   console.log(isLiked, initialIsLiked);
+
   const handleLikeArtwork = async (artworkId) => {
     try {
       const response = await fetch(
@@ -38,6 +40,7 @@ const ArtworkCards = ({
       if (response.ok) {
         const data = await response.json();
         setIsLiked(data.isLiked); // Update local state with response
+        fetchArt(); // Call fetchArt to refresh artworks in GalleryPage
       } else {
         alert("Failed to like artwork.");
       }
@@ -65,6 +68,9 @@ const ArtworkCards = ({
         </span>
 
         <div className="flex space-x-2">
+          <p className="text-gray-600 font-semibold flex items-center">
+            Likes: {likes}
+          </p>
           <button
             aria-label="Like artwork"
             onClick={() => handleLikeArtwork(artworkId)}
