@@ -18,7 +18,7 @@ router.get("/", authMiddleware, artworkController.fetchArtworks);
 
 // router.get("/:id", artworkController.fetchArtworkById);
 
-router.delete("/:id", authMiddleware, artworkController.deleteArtwork);
+router.delete("/delete/:id", authMiddleware, artworkController.deleteArtwork);
 
 //Toggle like
 router.patch("/:id/like", authMiddleware, artworkController.toggleLikeArtwork);
