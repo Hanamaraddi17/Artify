@@ -1,4 +1,5 @@
-
+CREATE DATABASE artify_db;
+use artify_db;
 
 CREATE TABLE users (
     user_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,

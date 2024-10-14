@@ -13,6 +13,7 @@ router.post(
 );
 
 // Route to fetch the artist's information by artist ID
+router.get("/myartworks", authMiddleware,artistController.fetchMyArtWorks);
 router.get("/:id", artistController.getArtistById);
 
 // Route to fetch all artists
@@ -22,7 +23,7 @@ router.get("/", artistController.getAllArtists);
 // router.put('/:id', authMiddleware, artistController.updateArtist);
 
 // Route to delete an artist account
-router.delete("/:id", authMiddleware, artistController.deleteArtist);
+router.delete("/delete/:id", authMiddleware, artistController.deleteArtist);
 
 
 // New route to check if the current user is an artist
