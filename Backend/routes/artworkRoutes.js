@@ -9,25 +9,22 @@ const upload = require("../config/multer/artworkUpload"); // Import the multer c
 
 router.post(
   "/upload",
-  authMiddleware, 
+  authMiddleware,
   upload.single("artworks"),
   artworkController.uploadArtwork
 ); // Use multer here
 
-router.get("/", artworkController.fetchArtworks);
+router.get("/", authMiddleware, artworkController.fetchArtworks);
 
-// router.get("/:id", artworkController.fetchArtworkById); 
+// router.get("/:id", artworkController.fetchArtworkById);
 
 router.delete("/:id", authMiddleware, artworkController.deleteArtwork);
 
-// Increment like count for an artwork
+//Toggle like
 router.patch("/:id/like", authMiddleware, artworkController.toggleLikeArtwork);
-
-
-router.patch("/:id/unlike", authMiddleware, artworkController.unlikeArtwork);
 
 // Fetch likes count for a specific artwork
 
-router.get('/liked-items',authMiddleware, artworkController.getLikedItems);
+router.get("/liked-items", authMiddleware, artworkController.getLikedItems);
 
 module.exports = router;

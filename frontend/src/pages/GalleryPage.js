@@ -15,27 +15,38 @@ const GalleryPage = () => {
   });
   const [token, setToken] = useState(""); // Initialize token as an empty string
   const [isArtist, setIsArtist] = useState(false); // State to track if user is an artist
-  const [showModal, setShowModal] = useState(false); // State for modal visibility
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
+  // Effect to set the token from localStorage once on component mount
   useEffect(() => {
-    // Retrieve the token from local storage
     const storedToken = localStorage.getItem("authToken");
     if (storedToken) {
       setToken(storedToken);
     }
+  }, []); // Empty dependency array ensures this runs only once
 
-    fetchArtworks(); // Fetch artworks after setting the token
-    checkArtistStatus(); // Check if the user is an artist
+  // Effect to fetch artworks when token is available
+  useEffect(() => {
+    if (token) {
+      fetchArtworks();
+      checkArtistStatus();
+    }
   }, [token]);
 
+  // Effect to filter artworks based on searchTerm
   useEffect(() => {
-    const results = artworks.filter(
-      (artwork) =>
-        artwork.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        artwork.category.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredArtworks(results);
+    if (Array.isArray(artworks)) {
+      const results = artworks.filter(
+        (artwork) =>
+          artwork.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          artwork.category.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredArtworks(results);
+    } else {
+      console.warn("artworks is not an array:", artworks);
+      setFilteredArtworks([]); // Reset to empty array to avoid errors
+    }
   }, [searchTerm, artworks]);
 
   const fetchArtworks = async () => {
@@ -44,12 +55,29 @@ const GalleryPage = () => {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json", // Ensure correct headers
         },
       });
+
+      if (!response.ok) {
+        // Handle HTTP errors
+        const errorData = await response.json();
+        console.error("Error fetching artworks:", errorData);
+        // Optionally, set an error state here to display to the user
+        setArtworks([]); // Ensure artworks is an array
+        return;
+      }
+
       const data = await response.json();
-      setArtworks(data);
+      if (Array.isArray(data)) {
+        setArtworks(data);
+      } else {
+        console.error("Unexpected data format:", data);
+        setArtworks([]); // Ensure artworks is an array
+      }
     } catch (error) {
       console.error("Error fetching artworks:", error);
+      setArtworks([]); // Ensure artworks is an array
     }
   };
 
@@ -62,14 +90,23 @@ const GalleryPage = () => {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
         }
       );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Error checking artist status:", errorData);
+        setIsArtist(false); // Default to false on error
+        return;
+      }
 
       const data = await response.json();
       setIsArtist(data.isArtist); // Assuming API returns { isArtist: true/false }
     } catch (error) {
       console.error("Error checking artist status:", error);
+      setIsArtist(false); // Default to false on error
     }
   };
 
@@ -78,29 +115,6 @@ const GalleryPage = () => {
       navigate("/uploadArtwork");
     } else {
       setShowModal(true); // Show modal if not an artist
-    }
-  };
-
-  const handleLikeArtwork = async (artworkId) => {
-    try {
-      const response = await fetch(
-        `http://localhost:5000/artworks/${artworkId}/like`,
-        {
-          method: "PATCH",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (response.ok) {
-        alert("Artwork liked successfully!");
-        fetchArtworks(); // Refresh artworks list to update likes
-      } else {
-        alert("Failed to like artwork.");
-      }
-    } catch (error) {
-      console.error("Error liking artwork:", error);
     }
   };
 
@@ -146,20 +160,27 @@ const GalleryPage = () => {
           Upload Artwork
         </button>
       </div>
-
       {/* Artwork Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredArtworks.map((artwork) => (
-          <ArtworkCards
-            key={artwork.artwork_id}
-            imageUrl={artwork.image_url}
-            title={artwork.title}
-            artist={artwork.artist_name}
-            price={artwork.price}
-            category={artwork.category}
-            onLike={() => handleLikeArtwork(artwork.artwork_id)}
-          />
-        ))}
+        {Array.isArray(filteredArtworks) && filteredArtworks.length > 0 ? (
+          filteredArtworks.map((artwork) => (
+            <ArtworkCards
+              key={artwork.artwork_id}
+              artworkId={artwork.artwork_id}
+              imageUrl={artwork.image_url}
+              title={artwork.title}
+              artist={artwork.artist_name}
+              price={artwork.price}
+              // onLike={() => handleLike(artwork.artwork_id)}
+              category={artwork.category}
+              initialIsLiked={artwork.isLiked} // Ensure backend provides isLiked
+            />
+          ))
+        ) : (
+          <p className="text-center col-span-full text-gray-500">
+            No artworks found.
+          </p>
+        )}
       </div>
 
       {/* Modal for Non-Artists */}
