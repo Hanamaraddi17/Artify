@@ -13,7 +13,6 @@ import { useNavigate } from "react-router-dom";
 
 // Importing Modal Components
 import PersonalInfoModal from "../pages/PersonalInfoModal";
-import MyArtworksModal from "../pages/MyArtworksModal";
 import OrderHistoryModal from "../pages/OrderHistoryModal";
 import CartItemsModal from "../pages/CartItemsModal";
 import WishlistModal from "../pages/WishlistModal";
@@ -38,6 +37,7 @@ const UserProfileDropdown = () => {
     setModalContent(null);
   };
   const handleNavigate = () => {
+    toggleDropdown();
     navigate("/myartworks");
   };
 
@@ -114,7 +114,7 @@ const UserProfileDropdown = () => {
           {/* Conditionally render "My Artworks" if the user is an artist */}
           {isArtist && (
             <button
-            onClick={handleNavigate}
+              onClick={handleNavigate}
               className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
             >
               <Image size={16} className="inline-block mr-2" /> My Artworks
@@ -150,7 +150,7 @@ const UserProfileDropdown = () => {
       )}
 
       {modalContent && (
-        <div className="fixed right-0 top-16 mt-2 w-96 bg-white rounded-lg shadow-xl z-50 animate-fadeIn overflow-y-auto max-h-96">
+        <div className="fixed right-0 top-16 mt-2 w-96 bg-white rounded-lg shadow-xl z-50 overflow-y-auto max-h-96">
           <div className="p-6">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold">
@@ -216,8 +216,6 @@ const getModalComponent = (content) => {
       return <CartItemsModal />;
     case "wishlist":
       return <WishlistModal />;
-    // case "myArtworks":
-    //   return <MyArtworksModal />;
     default:
       return null;
   }
