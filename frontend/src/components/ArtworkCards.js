@@ -20,8 +20,7 @@ const ArtworkCards = ({
   const token = localStorage.getItem("authToken");
 
   // Set isLiked based on initialIsLiked directly
-  const [isLiked, setIsLiked] = useState(initialIsLiked); // Assume 1 means liked, 0 means not liked
-  console.log(isLiked, initialIsLiked);
+  const [isLiked, setIsLiked] = useState(initialIsLiked);
 
   const handleLikeArtwork = async (artworkId) => {
     try {
@@ -48,6 +47,73 @@ const ArtworkCards = ({
       console.error("Error liking artwork:", error);
     }
   };
+
+  // Function to handle order placement
+  const handlePlaceOrder = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/orders/place", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          artworkId,
+          price,
+          artist,
+          title,
+        }), // Send order details
+      });
+
+      if (response.ok) {
+        alert("Order placed successfully!");
+      } else {
+        const errorData = await response.json();
+        alert(errorData.message || "Failed to place order.");
+      }
+    } catch (error) {
+      console.error("Error placing order:", error);
+    }
+  };
+
+  const handleAddToCart = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/cart/add", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          artwork_id: artworkId, // Send the artwork_id
+          quantity: 1, // Default quantity set to 1 (you can modify this if needed)
+        }), 
+      });
+  
+      if (response.ok) {
+        alert("Added to cart successfully!");
+      } else {
+        const errorData = await response.json();
+        alert(errorData.message || "Failed to add to cart.");
+      }
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+    }
+  };
+  
+
+  const handleShareArtwork = (title, formattedImageUrl) => {
+    const shareData = {
+      title,
+      text: `Check out this artwork: ${title}`,
+      url: `${formattedImageUrl}`
+    };
+
+    navigator.share(shareData).catch((error) => {
+      console.error("Error sharing artwork:", error);
+    });
+  };
+
 
   return (
     <div className="max-w-sm rounded-2xl overflow-hidden shadow-lg bg-white transition-all duration-700 ease-in-out hover:-translate-y-4 hover:shadow-2xl relative group">
@@ -85,6 +151,7 @@ const ArtworkCards = ({
           </button>
           <button
             aria-label="Share artwork"
+            onClick={() => handleShareArtwork(title, formattedImageUrl)}
             className="w-10 h-10 flex items-center justify-center bg-green-100 rounded-full transition-all duration-300 hover:bg-green-500"
           >
             <Share2 size={25} className="text-green-500 hover:text-white" />
@@ -93,7 +160,7 @@ const ArtworkCards = ({
       </div>
       <div className="px-6 pb-6 flex justify-between space-x-2">
         <button
-          aria-label="Add to cart"
+          aria-label="Add to cart" onClick={() => handleAddToCart(artworkId)}
           className="flex-1 py-2 bg-blue-500 text-white rounded-md transition-all duration-300 ease-in-out transform hover:bg-blue-600 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 flex items-center justify-center space-x-2 group"
         >
           <ShoppingCart
@@ -104,6 +171,7 @@ const ArtworkCards = ({
         </button>
         <button
           aria-label="Buy now"
+          onClick={handlePlaceOrder} // Call handlePlaceOrder on click
           className="flex-1 py-2 bg-purple-500 text-white rounded-md transition-all duration-300 ease-in-out transform hover:bg-purple-600 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-opacity-50 flex items-center justify-center space-x-2 group"
         >
           <CreditCard

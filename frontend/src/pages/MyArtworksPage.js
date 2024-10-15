@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Trash, Share2, Search } from "lucide-react";
+import { Trash, Share2, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const MyArtworksPage = () => {
@@ -107,7 +108,6 @@ const MyArtworksPage = () => {
       <h1 className="text-4xl font-extrabold mb-10 text-center text-blue-400 ">
         My <span className="text-indigo-900">Artworks</span>
       </h1>
-
       {/* Artist Profile Information */}
       {/* {artistDetails && (
         <div className="flex justify-center items-center">
