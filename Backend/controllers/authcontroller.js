@@ -86,7 +86,10 @@ exports.login = async (req, res) => {
 exports.deleteAccount = (req, res) => {
   const user_id = req.user.id; // Extracted from token in middleware
 
-  const query = "DELETE FROM Users WHERE id = ?";
+  console.log("User ID from token:", user_id); // Log the user ID
+
+  const query = "DELETE FROM Users WHERE user_id = ?";
+  
   db.query(query, [user_id], (err, result) => {
     if (err) {
       return res.status(500).json({ error: "Error deleting account." });

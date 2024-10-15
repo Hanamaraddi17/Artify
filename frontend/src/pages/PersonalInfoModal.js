@@ -1,6 +1,6 @@
-// src/components/modals/PersonalInfoModal.js
 import React, { useState, useEffect } from "react";
 import { User, Mail, Info, Trash } from "lucide-react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 const PersonalInfoModal = () => {
   const [username, setUsername] = useState("");
@@ -8,6 +8,9 @@ const PersonalInfoModal = () => {
   const [isArtist, setIsArtist] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [submitStatus, setSubmitStatus] = useState(""); // To track submit status
+  const [errorMessage, setErrorMessage] = useState(""); // For detailed error message
+  const navigate = useNavigate(); // Initialize navigate
 
   useEffect(() => {
     const fetchPersonalInfo = async () => {
@@ -52,6 +55,48 @@ const PersonalInfoModal = () => {
     fetchPersonalInfo();
   }, []);
 
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("username");
+    setTimeout(() => {
+      navigate("/signup"); // Redirect to the Signup page after logout
+      window.location.reload();
+    }, 2000);
+  };
+
+  const handleDeleteAccount = async () => {
+    const token = localStorage.getItem("authToken"); // Fetch token from local storage
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this account?"
+    );
+    if (!confirmDelete) return;
+
+    try {
+      const response = await fetch(
+        `http://localhost:5000/auth/delete`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.ok) {
+        setSubmitStatus("success"); // Set submit status to success
+        handleLogout(); // Call the logout function on successful deletion
+      } else {
+        const errorData = await response.json();
+        setErrorMessage(errorData.message || "Failed to delete account.");
+        setSubmitStatus("error"); // Set submit status to error
+      }
+    } catch (error) {
+      console.error("Error deleting account:", error);
+      setErrorMessage("An error occurred while deleting the account.");
+      setSubmitStatus("error"); // Set submit status to error
+    }
+  };
+
   if (loading) {
     return <p className="text-center">Loading...</p>;
   }
@@ -77,11 +122,27 @@ const PersonalInfoModal = () => {
         <h3 className="text-md font-semibold">User Type:</h3>
         <p className="ml-2">{isArtist ? "Artist" : "Regular User"}</p>
       </div>
-      {/* bg-red-100 text-red-500 px-6 py-2 rounded-full hover:bg-red-200 transition-colors duration-300 */}
-      <button className="flex items-center bg-red-500 text-white hover:bg-red-700  px-2 transition-colors duration-300 ml-20 p-1 rounded-sm">
+      <button
+        className="flex items-center bg-red-500 text-white hover:bg-red-700 px-2 transition-colors duration-300 ml-20 p-1 rounded-sm"
+        onClick={handleDeleteAccount} // Use the function directly
+      >
         <span className="text-sm">Delete Account</span>
         <Trash size={18} className="ml-2" />
       </button>
+
+      {/* Success Message */}
+      {submitStatus === "success" && (
+        <div className="mt-6 bg-green-50 border-green-200 p-4 rounded">
+          <p className="text-green-800">Account deleted successfully!</p>
+        </div>
+      )}
+
+      {/* Error Message */}
+      {submitStatus === "error" && (
+        <div className="mt-6 bg-red-50 border-red-200 p-4 rounded">
+          <p className="text-red-800">{errorMessage}</p>
+        </div>
+      )}
     </div>
   );
 };

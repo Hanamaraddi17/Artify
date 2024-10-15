@@ -72,7 +72,7 @@ CREATE TABLE likes (
     UNIQUE KEY (user_id, artwork_id) -- Ensure a user can like the same artwork only once
 );
 
-desc likes
+desc likes;
 
 CREATE TABLE orders (
     order_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,

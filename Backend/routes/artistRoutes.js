@@ -19,13 +19,6 @@ router.get("/:id", artistController.getArtistById);
 // Route to fetch all artists
 router.get("/", artistController.getAllArtists);
 
-// Route to update artist profile
-// router.put('/:id', authMiddleware, artistController.updateArtist);
-
-// Route to delete an artist account
-router.delete("/delete/:id", authMiddleware, artistController.deleteArtist);
-
-
 // New route to check if the current user is an artist
 router.get("/check/artist", authMiddleware, artistController.checkIfArtist); // New route to check if user is artist
 
