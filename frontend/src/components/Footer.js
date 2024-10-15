@@ -13,35 +13,27 @@ const Footer = () => {
     <footer className="bg-gray-100">
       <div>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 pt-12 py-4 px-8">
-          {/* ... (previous code remains unchanged) ... */}
           <div>
-            {/* <h2 className="text-2xl font-bold mb-4">Artify</h2> */}
-            {/* <p className="mb-2">A108 Adam Street</p>
-            <p className="mb-2">New York, NY 535022</p>
-            <p className="mb-2">United States</p> */}
             <img src="images/logo2.png" className="w-48" alt="logo" />
-            {/* <p className="mb-2">
-              <strong>Phone:</strong> +1 5589 55488 55
-            </p>
-            <p>
-              <strong>Email:</strong> info@artify.com
-            </p> */}
           </div>
 
           <div>
             <h3 className="text-xl font-semibold mb-4">Useful Links</h3>
             <ul className="space-y-2">
               {[
-                "Home",
-                "About us",
-                "Services",
-                "Terms of service",
-                "Privacy policy",
+                { name: "Home", link: "/" },
+                { name: "About Us", link: "/about" },
+                { name: "Gallery", link: "/gallery" },
+                { name: "Our Artists", link: "/artists" },
+                { name: "Privacy Policy", link: "/privacy" },
               ].map((item, index) => (
                 <li key={index} className="flex items-center">
                   <ChevronRight className="w-4 h-4 text-blue-500 mr-2" />
-                  <a href="#" className="hover:text-blue-500 transition-colors">
-                    {item}
+                  <a
+                    href={item.link}
+                    className="hover:text-blue-500 transition-all transform hover:translate-x-1"
+                  >
+                    {item.name}
                   </a>
                 </li>
               ))}
@@ -52,15 +44,17 @@ const Footer = () => {
             <h3 className="text-xl font-semibold mb-4">Our Services</h3>
             <ul className="space-y-2">
               {[
-                "Web Design",
-                "Web Development",
-                "Product Management",
-                "Marketing",
-                "Graphic Design",
+                "Artwork Submission",
+                "Art Marketplace",
+                "Artist Profiles",
+                "Order Tracking",
+                "Community Engagement",
               ].map((item, index) => (
                 <li key={index} className="flex items-center">
                   <ChevronRight className="w-4 h-4 text-blue-500 mr-2" />
-                  <span>{item}</span>
+                  <span className="hover:text-blue-500 transition-all transform hover:translate-x-1">
+                    {item}
+                  </span>
                 </li>
               ))}
             </ul>
@@ -69,8 +63,8 @@ const Footer = () => {
           <div>
             <h3 className="text-xl font-semibold mb-4">Our Social Networks</h3>
             <p className="mb-4">
-              Cras fermentum odio eu feugiat lide par naso tierra videa magna
-              derita valies
+              Follow us on our social media platforms for the latest updates,
+              art inspiration, and community events.
             </p>
             <div className="flex space-x-2">
               <a

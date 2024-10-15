@@ -95,7 +95,7 @@ const WishlistModal = () => {
               <div className="flex flex-col flex-1">
                 <h3 className="text-md font-semibold">{artwork.title}</h3>
 
-                <p className="text-lg font-bold">Price: ${artwork.price}</p>
+                <p className="text-md">Price: ₹{artwork.price}</p>
               </div>
               <button
                 aria-label="Remove from wishlist"

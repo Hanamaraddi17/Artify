@@ -197,7 +197,7 @@ const getModalTitle = (content) => {
     case "cart":
       return "Cart Items";
     case "wishlist":
-      return "Wishlist";
+      return "My Wishlist";
     case "myArtworks":
       return "My Artworks";
     default:

@@ -107,6 +107,13 @@ const MyArtworksPage = () => {
       <h1 className="text-4xl font-extrabold mb-10 text-center text-blue-400 ">
         My <span className="text-indigo-900">Artworks</span>
       </h1>
+      <p className="text-md text-gray-700 mb-10 mx-4 text-center">
+        Explore the vibrant world of creativity on my Artworks page, where each
+        piece tells a unique story. Discover a diverse collection of original
+        artworks, showcasing my artistic journey and passion for expression.
+        From intricate details to bold colors, immerse yourself in the beauty of
+        art and find inspiration in every creation.
+      </p>
       {/* Artist Profile Information */}
       {/* {artistDetails && (
         <div className="flex justify-center items-center">

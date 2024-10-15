@@ -87,9 +87,9 @@ const ArtworkCards = ({
         body: JSON.stringify({
           artwork_id: artworkId, // Send the artwork_id
           quantity: 1, // Default quantity set to 1 (you can modify this if needed)
-        }), 
+        }),
       });
-  
+
       if (response.ok) {
         alert("Added to cart successfully!");
       } else {
@@ -100,20 +100,18 @@ const ArtworkCards = ({
       console.error("Error adding to cart:", error);
     }
   };
-  
 
   const handleShareArtwork = (title, formattedImageUrl) => {
     const shareData = {
       title,
       text: `Check out this artwork: ${title}`,
-      url: `${formattedImageUrl}`
+      url: `${formattedImageUrl}`,
     };
 
     navigator.share(shareData).catch((error) => {
       console.error("Error sharing artwork:", error);
     });
   };
-
 
   return (
     <div className="max-w-sm rounded-2xl overflow-hidden shadow-lg bg-white transition-all duration-700 ease-in-out hover:-translate-y-4 hover:shadow-2xl relative group">
@@ -125,7 +123,9 @@ const ArtworkCards = ({
       <div className="px-6 py-4">
         <h2 className="font-bold text-xl mb-2">{title}</h2>
         <p className="text-gray-700 text-base mb-2">by {artist}</p>
-        <p className="text-blue-600 font-semibold">₹{price.toLocaleString()}</p>
+        <p className="text-orange-500 font-semibold">
+          ₹{price.toLocaleString()}
+        </p>
         {/* Display like count */}
       </div>
       <div className="px-6 pt-4 pb-2 flex justify-between items-center">
@@ -160,7 +160,8 @@ const ArtworkCards = ({
       </div>
       <div className="px-6 pb-6 flex justify-between space-x-2">
         <button
-          aria-label="Add to cart" onClick={() => handleAddToCart(artworkId)}
+          aria-label="Add to cart"
+          onClick={() => handleAddToCart(artworkId)}
           className="flex-1 py-2 bg-blue-500 text-white rounded-md transition-all duration-300 ease-in-out transform hover:bg-blue-600 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 flex items-center justify-center space-x-2 group"
         >
           <ShoppingCart

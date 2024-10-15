@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Trash2 } from "lucide-react";
+import { Trash2, CreditCard } from "lucide-react";
 
 const CartModal = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -71,8 +71,8 @@ const CartModal = () => {
 
   return (
     <div>
-      <h3 className="text-lg font-semibold text-center mb-4">
-       ({totalItems} Art Works)
+      <h3 className="text-md  text-center mb-4 font-semibold">
+        Total items : {totalItems}
       </h3>
       <div className="flex flex-col space-y-4 ">
         {cartItems.length > 0 ? (
@@ -88,8 +88,7 @@ const CartModal = () => {
               />
               <div className="flex flex-col flex-1">
                 <h3 className="text-md font-semibold">{item.title}</h3>
-                <p className="text-lg font-bold">Price: ${item.price}</p>
-                <p className="text-sm">Quantity: {item.quantity}</p>
+                <p className="text-md">Price: ₹{item.price}</p>
               </div>
               <button
                 aria-label="Remove from cart"
@@ -104,8 +103,18 @@ const CartModal = () => {
           <p className="text-gray-500">No items in your cart.</p>
         )}
       </div>
-      <div className="text-right mt-4">
-        <p className="text-lg font-bold">Total Price: ${totalPrice}</p>
+      <div className="text-right mt-4 flex space-x-4 justify-center items-center">
+        <p className="text-md font-semibold">Total Price: ₹{totalPrice}</p>
+        <button
+          aria-label="Buy now"
+          className="flex-1 py-2 bg-green-500 text-white rounded-md transition-all duration-300 ease-in-out transform hover:bg-green-600 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-50 flex items-center justify-center space-x-2 group"
+        >
+          <CreditCard
+            size={18}
+            className="transition-transform duration-300 group-hover:rotate-12"
+          />
+          <span>Buy Now</span>
+        </button>
       </div>
     </div>
   );
