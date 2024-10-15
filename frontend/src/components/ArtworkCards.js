@@ -102,6 +102,17 @@ const ArtworkCards = ({
   };
   
 
+  const handleShareArtwork = (title, formattedImageUrl) => {
+    const shareData = {
+      title,
+      text: `Check out this artwork: ${title}`,
+      url: `${formattedImageUrl}`
+    };
+
+    navigator.share(shareData).catch((error) => {
+      console.error("Error sharing artwork:", error);
+    });
+  };
 
 
   return (
@@ -140,6 +151,7 @@ const ArtworkCards = ({
           </button>
           <button
             aria-label="Share artwork"
+            onClick={() => handleShareArtwork(title, formattedImageUrl)}
             className="w-10 h-10 flex items-center justify-center bg-green-100 rounded-full transition-all duration-300 hover:bg-green-500"
           >
             <Share2 size={25} className="text-green-500 hover:text-white" />

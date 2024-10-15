@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Trash, Share2 } from "lucide-react";
+import { Trash, Share2, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const MyArtworksPage = () => {
@@ -47,7 +47,7 @@ const MyArtworksPage = () => {
 
   const handleDeleteArtwork = async (artworkId) => {
     try {
-      console.log("artwork id:",artworkId);
+      console.log("artwork id:", artworkId);
       const response = await fetch(`http://localhost:5000/artworks/delete/${artworkId}`, {
         method: "DELETE",
         headers: {
@@ -89,7 +89,7 @@ const MyArtworksPage = () => {
       </h1>
 
       {/* Artist Profile Information */}
-      {artistDetails && (
+      {/* {artistDetails && (
         <div className="bg-white p-4 rounded shadow mb-6">
           <img
             className="w-32 h-32 object-cover rounded-full mx-auto"
@@ -104,7 +104,7 @@ const MyArtworksPage = () => {
           <p className="text-gray-600">Phone: {artistDetails.phone}</p>
           <p className="text-gray-600">Address: {artistDetails.address}</p>
         </div>
-      )}
+      )} */}
 
       {/* Search input */}
       <div className="relative max-w-md mx-auto mb-6">
@@ -115,7 +115,12 @@ const MyArtworksPage = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
           className="w-full px-4 py-2 rounded-full border-2 border-blue-300 focus:outline-none focus:border-blue-500 transition-all duration-300"
         />
+        <Search
+          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-indigo-500"
+          size={20}
+        />
       </div>
+
 
       {/* Artworks Section */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -134,16 +139,16 @@ const MyArtworksPage = () => {
               </div>
               <div className="flex justify-between px-6 pb-6">
                 <button
-                  className="bg-red-500 text-white p-2 rounded"
+                 aria-label="Delete artwork"  className= "w-16 h-16 flex items-center justify-center bg-red-100 rounded-full transition-all duration-300 hover:bg-red-500 "
                   onClick={() => handleDeleteArtwork(artwork.artwork_id)}
                 >
-                  <Trash size={18} />
+                  <Trash size={30} className="text-red-500 hover:text-white group:" />
                 </button>
-                <button
-                  className="bg-green-500 text-white p-2 rounded"
-                  onClick={() => handleShareArtwork(artwork.title, artwork.image_url)}
+                <button onClick={() => handleShareArtwork(artwork.title, artwork.image_url)}
+                  aria-label="Share artwork"
+                  className="w-16 h-16 flex items-center justify-center bg-green-100 rounded-full transition-all duration-300 hover:bg-green-500"
                 >
-                  <Share2 size={18} />
+                  <Share2 size={30} className="text-green-500 hover:text-white group:" />
                 </button>
               </div>
             </div>

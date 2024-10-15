@@ -37,6 +37,9 @@ const UserProfileDropdown = () => {
   const closeModal = () => {
     setModalContent(null);
   };
+  const handleNavigate = () => {
+    navigate("/myartworks");
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
@@ -111,7 +114,7 @@ const UserProfileDropdown = () => {
           {/* Conditionally render "My Artworks" if the user is an artist */}
           {isArtist && (
             <button
-              onClick={() => openModal("myArtworks")}
+            onClick={handleNavigate}
               className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
             >
               <Image size={16} className="inline-block mr-2" /> My Artworks
@@ -213,8 +216,8 @@ const getModalComponent = (content) => {
       return <CartItemsModal />;
     case "wishlist":
       return <WishlistModal />;
-    case "myArtworks":
-      return <MyArtworksModal />;
+    // case "myArtworks":
+    //   return <MyArtworksModal />;
     default:
       return null;
   }
