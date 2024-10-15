@@ -113,7 +113,8 @@ const ArtworkCards = ({
           <span>Buy Now</span>
         </button>
       </div>
-      <div className="absolute bottom-0 left-0 w-full h-1 bg-blue-600 transform scale-x-0 transition-all duration-300 group-hover:scale-x-100" />
+      {/* Blue Line Transition */}
+      <div className="absolute bottom-0 left-0 w-full h-1 bg-blue-500 transform scale-x-0 origin-center transition-transform duration-700 group-hover:scale-x-100"></div>
     </div>
   );
 };

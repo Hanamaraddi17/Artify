@@ -77,7 +77,8 @@ const PersonalInfoModal = () => {
         <h3 className="text-md font-semibold">User Type:</h3>
         <p className="ml-2">{isArtist ? "Artist" : "Regular User"}</p>
       </div>
-      <button className="flex items-center bg-red-500 ml-20 text-white p-1 rounded-sm">
+      {/* bg-red-100 text-red-500 px-6 py-2 rounded-full hover:bg-red-200 transition-colors duration-300 */}
+      <button className="flex items-center bg-red-500 text-white hover:bg-red-700  px-2 transition-colors duration-300 ml-20 p-1 rounded-sm">
         <span className="text-sm">Delete Account</span>
         <Trash size={18} className="ml-2" />
       </button>
