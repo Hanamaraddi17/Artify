@@ -8,12 +8,12 @@ const upload = require("../config/multer/pfpUpload"); // Import the multer confi
 router.post(
   "/join",
   authMiddleware,
-  upload.single("photo"), 
+  upload.single("photo"),
   artistController.joinArtist
 );
 
 // Route to fetch the artist's information by artist ID
-router.get("/myartworks", authMiddleware,artistController.fetchMyArtWorks);
+router.get("/myartworks", authMiddleware, artistController.fetchMyArtWorks);
 router.get("/:id", artistController.getArtistById);
 
 // Route to fetch all artists

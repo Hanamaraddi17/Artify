@@ -15,8 +15,8 @@ const PersonalInfoModal = () => {
   useEffect(() => {
     const fetchPersonalInfo = async () => {
       // Fetch username and email from local storage
-      const storedUsername = localStorage.getItem("username");
-      const storedEmail = localStorage.getItem("email");
+      const storedUsername = sessionStorage.getItem("username");
+      const storedEmail = sessionStorage.getItem("email");
       if (storedUsername && storedEmail) {
         setUsername(storedUsername);
         setEmail(storedEmail);
@@ -31,7 +31,7 @@ const PersonalInfoModal = () => {
           {
             method: "GET",
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+              Authorization: `Bearer ${sessionStorage.getItem("authToken")}`,
               "Content-Type": "application/json",
             },
           }
@@ -56,8 +56,8 @@ const PersonalInfoModal = () => {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("username");
+    sessionStorage.removeItem("authToken");
+    sessionStorage.removeItem("username");
     setTimeout(() => {
       navigate("/signup"); // Redirect to the Signup page after logout
       window.location.reload();
@@ -65,22 +65,19 @@ const PersonalInfoModal = () => {
   };
 
   const handleDeleteAccount = async () => {
-    const token = localStorage.getItem("authToken"); // Fetch token from local storage
+    const token = sessionStorage.getItem("authToken"); // Fetch token from local storage
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this account?"
     );
     if (!confirmDelete) return;
 
     try {
-      const response = await fetch(
-        `http://localhost:5000/auth/delete`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await fetch(`http://localhost:5000/auth/delete`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       if (response.ok) {
         setSubmitStatus("success"); // Set submit status to success
@@ -122,13 +119,14 @@ const PersonalInfoModal = () => {
         <h3 className="text-md font-semibold">User Type:</h3>
         <p className="ml-2">{isArtist ? "Artist" : "Regular User"}</p>
       </div>
-      <button
-        className="flex items-center bg-red-500 text-white hover:bg-red-700 px-2 transition-colors duration-300 ml-20 p-1 rounded-sm"
-        onClick={handleDeleteAccount} // Use the function directly
-      >
-        <span className="text-sm">Delete Account</span>
-        <Trash size={18} className="ml-2" />
-      </button>
+      <div className="flex justify-center">
+        <button
+          className="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600 transition-colors duration-300"
+          onClick={handleDeleteAccount}
+        >
+          Delete Account
+        </button>
+      </div>
 
       {/* Success Message */}
       {submitStatus === "success" && (

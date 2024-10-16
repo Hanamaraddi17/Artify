@@ -50,7 +50,7 @@ export default function ArtworkUploadPage() {
     data.append("category", formData.category);
     data.append("artworks", formData.artworkFile);
 
-    const token = localStorage.getItem("authToken");
+    const token = sessionStorage.getItem("authToken");
 
     try {
       const response = await fetch("http://localhost:5000/artworks/upload", {

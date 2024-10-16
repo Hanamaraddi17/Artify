@@ -17,7 +17,7 @@ const ArtworkCards = ({
     ? `http://localhost:5000/${imageUrl.replace(/\\/g, "/")}` // Replace backslashes with forward slashes
     : "/images/default.jpeg"; // Provide a default image if photo is null
 
-  const token = localStorage.getItem("authToken");
+  const token = sessionStorage.getItem("authToken");
 
   // Set isLiked based on initialIsLiked directly
   const [isLiked, setIsLiked] = useState(initialIsLiked);

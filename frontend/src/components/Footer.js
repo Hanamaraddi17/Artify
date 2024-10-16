@@ -107,10 +107,24 @@ const Footer = () => {
             &copy; Copyright <strong>Artify</strong>. All Rights Reserved
           </p>
           <p>
-            Designed by{" "}
-            <a href="#" className="text-blue-500 hover:underline">
-              Akshay Kumar S
-            </a>
+            <div>
+              Designed by{" "}
+              <a
+                href="https://github.com/AkahayKumarS"
+                target="_blank"
+                className="text-blue-500 hover:underline"
+              >
+                Akshay
+              </a>{" "}
+              &{" "}
+              <a
+                href="https://github.com/Hanamaraddi17"
+                target="_blank"
+                className="text-blue-500 hover:underline"
+              >
+                Reddy
+              </a>
+            </div>
           </p>
         </div>
       </div>

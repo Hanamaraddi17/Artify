@@ -10,7 +10,7 @@ const MyArtworksPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("authToken");
+    const storedToken = sessionStorage.getItem("authToken");
     if (storedToken) {
       setToken(storedToken);
     } else {

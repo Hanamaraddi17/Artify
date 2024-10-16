@@ -49,9 +49,9 @@ const LoginComponent = () => {
       const data = await response.json();
 
       if (data.token) {
-        localStorage.setItem("authToken", data.token);
-        localStorage.setItem("username", data.username);
-        localStorage.setItem("email", data.email);
+        sessionStorage.setItem("authToken", data.token);
+        sessionStorage.setItem("username", data.username);
+        sessionStorage.setItem("email", data.email);
 
         setShowModal(true);
         setTimeout(() => {
@@ -221,7 +221,7 @@ const SignupComponent = () => {
           navigate("/login"); // Redirect to login page after 2 seconds
         }, 2000);
       } else {
-        setErrorMessage("Signup failed: " + data.message);
+        setErrorMessage("Signup failed: " + data.error);
         setTimeout(() => setErrorMessage(""), 2000);
       }
     } catch (error) {

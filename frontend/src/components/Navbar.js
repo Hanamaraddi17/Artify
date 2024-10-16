@@ -13,14 +13,14 @@ const Navbar = () => {
 
   // Check if user is logged in by checking auth token in local storage
   useEffect(() => {
-    const authToken = localStorage.getItem("authToken");
+    const authToken = sessionStorage.getItem("authToken");
     setIsLoggedIn(!!authToken);
   }, []);
 
   // Handle logout
   const handleLogout = () => {
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("username");
+    sessionStorage.removeItem("authToken");
+    sessionStorage.removeItem("username");
     setIsLoggedIn(false);
     setShowLogoutModal(true); // Show logout modal
     setTimeout(() => {
@@ -113,14 +113,14 @@ const Navbar = () => {
               onClick={handleLogout}
               className="bg-red-100 text-red-500 px-6 py-2 rounded-full hover:bg-red-200 transition-colors duration-300"
             >
-              Logout
+              Log out
             </button>
           ) : (
             <a
-              href="/signup"
+              href="/login"
               className="bg-blue-100 text-blue-500 px-6 py-2 rounded-full hover:bg-blue-200 transition-colors duration-300"
             >
-              Sign Up
+              Log in
             </a>
           )}
           {isLoggedIn && <UserProfileDropdown />}

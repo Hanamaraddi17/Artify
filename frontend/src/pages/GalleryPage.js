@@ -18,9 +18,9 @@ const GalleryPage = () => {
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
-  // Effect to set the token from localStorage once on component mount
+  // Effect to set the token from sessionStorage once on component mount
   useEffect(() => {
-    const storedToken = localStorage.getItem("authToken");
+    const storedToken = sessionStorage.getItem("authToken");
     if (storedToken) {
       setToken(storedToken);
     }

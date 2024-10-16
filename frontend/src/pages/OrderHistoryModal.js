@@ -10,7 +10,7 @@ const OrderHistoryModal = () => {
 
   useEffect(() => {
     const fetchOrderHistory = async () => {
-      const token = localStorage.getItem("authToken");
+      const token = sessionStorage.getItem("authToken");
       if (!token) {
         setError("No authentication token found.");
         setLoading(false);

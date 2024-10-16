@@ -42,8 +42,8 @@ const UserProfileDropdown = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("username");
+    sessionStorage.removeItem("authToken");
+    sessionStorage.removeItem("username");
     setShowLogoutModal(true); // Show logout modal
     setTimeout(() => {
       setShowLogoutModal(false); // Hide modal after 2 seconds
@@ -55,7 +55,7 @@ const UserProfileDropdown = () => {
   // useEffect to check if the user is an artist
   useEffect(() => {
     const checkIfArtist = async () => {
-      const token = localStorage.getItem("authToken");
+      const token = sessionStorage.getItem("authToken");
       if (!token) return;
 
       try {

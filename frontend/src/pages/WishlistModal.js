@@ -6,7 +6,7 @@ const WishlistModal = () => {
 
   const fetchLikedArtworks = async () => {
     try {
-      const token = localStorage.getItem("authToken"); // Retrieve the token from local storage
+      const token = sessionStorage.getItem("authToken"); // Retrieve the token from local storage
       const response = await fetch(
         "http://localhost:5000/artworks/liked-items",
         {
@@ -40,7 +40,7 @@ const WishlistModal = () => {
 
   const handleUnlikeArtwork = async (artworkId) => {
     try {
-      const token = localStorage.getItem("authToken"); // Retrieve the token from local storage
+      const token = sessionStorage.getItem("authToken"); // Retrieve the token from local storage
       const response = await fetch(
         `http://localhost:5000/artworks/${artworkId}/like`, // Assuming the same endpoint can handle unliking
         {

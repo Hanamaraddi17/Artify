@@ -74,7 +74,7 @@ export default function ArtistRegistrationPage() {
     data.append("biography", formData.biography);
     data.append("photo", formData.photo); // Changed from profilePhoto to photo
 
-    const token = localStorage.getItem("authToken");
+    const token = sessionStorage.getItem("authToken");
 
     try {
       const response = await fetch("http://localhost:5000/artist/join", {

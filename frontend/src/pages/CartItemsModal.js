@@ -9,7 +9,7 @@ const CartModal = () => {
   // Fetch cart items
   const fetchCartItems = async () => {
     try {
-      const token = localStorage.getItem("authToken");
+      const token = sessionStorage.getItem("authToken");
       const response = await fetch("http://localhost:5000/cart", {
         method: "GET",
         headers: {
@@ -35,7 +35,7 @@ const CartModal = () => {
   // Remove item from cart and refetch the updated data
   const handleRemoveCartItem = async (artworkId) => {
     try {
-      const token = localStorage.getItem("authToken");
+      const token = sessionStorage.getItem("authToken");
       const response = await fetch(
         `http://localhost:5000/cart/remove/${artworkId}`,
         {
