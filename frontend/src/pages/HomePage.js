@@ -116,7 +116,7 @@ function HomePage() {
   return (
     <div>
       {/* Keep your existing hero section */}
-      <div className="bg-blue-100 py-16">
+      <div className="bg-blue-100 py-20">
         <div className="pl-36 flex flex-col md:flex-row items-center min-h-[420px] max-h-[520px]">
           <div className="text-content md:w-1/2 mb-8 md:mb-0">
             {userName && (

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
 import { useNavigate } from "react-router-dom"; // To handle redirection
+import SignupSuccessModal from "../components/SignupSuccessModal";
 
 // Regex for password validation (at least 8 characters, 1 uppercase, 1 special character, 1 digit)
 const passwordRegex =
@@ -80,14 +81,11 @@ const LoginComponent = () => {
         {showModal && (
           <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-500 bg-opacity-50">
             <div className="bg-white p-8 rounded-lg shadow-lg">
-              <p className="text-center font-bold text-green-500">
-                Login Successful!
-              </p>
+              <p className="text-center text-green-500">Login Successful!</p>
             </div>
           </div>
         )}
-    
-    
+
         <div className="flex justify-center space-x-4 mb-6">
           <button className="p-2 border rounded-full hover:bg-gray-50">
             <img src="/images/google.png" alt="Google" className="w-6 h-6" />
@@ -218,10 +216,6 @@ const SignupComponent = () => {
       const data = await response.json();
       if (data.message) {
         setShowModal(true);
-        setTimeout(() => {
-          setShowModal(false);
-          navigate("/login"); // Redirect to login page after 2 seconds
-        }, 2000);
       } else {
         setErrorMessage("Signup failed: " + data.error);
         setTimeout(() => setErrorMessage(""), 2000);
@@ -233,35 +227,34 @@ const SignupComponent = () => {
   };
 
   return (
-      <div className="flex flex-col md:flex-row max-w-5xl mx-auto bg-white my-16 rounded-xl shadow-xl overflow-hidden">
-        <div className="w-full md:w-1/2 bg-blue-400 p-12 text-white flex flex-col justify-center items-center">
-          <h2 className="text-4xl font-bold mb-4">Welcome Back!</h2>
-          <p className="text-center mb-8">
-            To keep connected with us, please login with your personal info
-          </p>
-          <button
-            onClick={() => (window.location.href = "/login")}
-            className="px-12 py-3 border-2 border-white rounded-full text-white hover:bg-blue-500 transition-all duration-300"
-          >
-            LOG IN
-          </button>
-        </div>
-  
-        <div className="w-full md:w-1/2 p-12">
-          <h2 className="text-3xl font-bold mb-6 text-blue-400 text-center">
-            Create <span className="text-blue-900">Account</span>
-          </h2>
-  
-          {/* Modal for signup success */}
-          {showModal && (
-            <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-500 bg-opacity-50">
-              <div className="bg-white p-8 rounded-lg shadow-lg">
-                <p className="text-center font-bold text-green-500">
-                  Signup Successful!
-                </p>
-              </div>
-            </div>
-          )}
+    <div className="flex flex-col md:flex-row max-w-5xl mx-auto bg-white my-16 rounded-xl shadow-xl overflow-hidden">
+      <div className="w-full md:w-1/2 bg-blue-400 p-12 text-white flex flex-col justify-center items-center">
+        <h2 className="text-4xl font-bold mb-4">Welcome Back!</h2>
+        <p className="text-center mb-8">
+          To keep connected with us, please login with your personal info
+        </p>
+        <button
+          onClick={() => (window.location.href = "/login")}
+          className="px-12 py-3 border-2 border-white rounded-full text-white hover:bg-blue-500 transition-all duration-300"
+        >
+          LOG IN
+        </button>
+      </div>
+
+      <div className="w-full md:w-1/2 p-12">
+        <h2 className="text-3xl font-bold mb-6 text-blue-400 text-center">
+          Create <span className="text-blue-900">Account</span>
+        </h2>
+
+        {/* Modal for signup success */}
+        {showModal && (
+          <SignupSuccessModal />
+          // <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-500 bg-opacity-50">
+          //   <div className="bg-white p-8 rounded-lg shadow-lg">
+          //     <p className="text-center text-green-500">Signup Successful!</p>
+          //   </div>
+          // </div>
+        )}
         <div className="flex justify-center space-x-4 mb-6">
           <button className="p-2 border rounded-full hover:bg-gray-50">
             <img src="/images/google.png" alt="Google" className="w-6 h-6" />
