@@ -26,7 +26,7 @@ exports.signup = async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     const query =
-      "INSERT INTO Users (username, email, password) VALUES (?, ?, ?)";
+      "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
 
     db.query(query, [username, email, hashedPassword], (error, results) => {
       if (error) {
@@ -57,7 +57,7 @@ exports.login = async (req, res) => {
       .json({ error: "Password must be at least 6 characters long." });
   }
 
-  const query = "SELECT * FROM Users WHERE email = ?";
+  const query = "SELECT * FROM users WHERE email = ?";
 
   db.query(query, [email], async (error, results) => {
     if (error || results.length === 0) {
@@ -77,18 +77,18 @@ exports.login = async (req, res) => {
       { expiresIn: "1h" }
     );
 
-    // Include username in the response
+    
     res.json({ token, username: user.username, email: user.email });
   });
 };
 
 // Delete user account
 exports.deleteAccount = (req, res) => {
-  const user_id = req.user.id; // Extracted from token in middleware
+  const user_id = req.user.id; 
 
-  console.log("User ID from token:", user_id); // Log the user ID
+  console.log("User ID from token:", user_id); 
 
-  const query = "DELETE FROM Users WHERE user_id = ?";
+  const query = "DELETE FROM users WHERE user_id = ?";
   
   db.query(query, [user_id], (err, result) => {
     if (err) {

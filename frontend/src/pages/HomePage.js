@@ -117,47 +117,49 @@ function HomePage() {
     <div>
       {/* Keep your existing hero section */}
       <div className="bg-blue-100 py-20">
-        <div className="pl-36 flex flex-col md:flex-row items-center min-h-[420px] max-h-[520px]">
-          <div className="text-content md:w-1/2 mb-8 md:mb-0">
-            {userName && (
-              <h2 className="text-2xl font-bold mb-4 text-blue-800">
-                Hi, <span>{userName}</span>! Welcome to Artify
-              </h2>
-            )}
-            <h1 className="text-3xl md:text-5xl font-bold mb-4 text-blue-400 drop-shadow-[2px_2px_var(--tw-shadow-color)] shadow-blue-950">
-              Discover, Collect, and
-            </h1>
-            <h1 className="text-3xl md:text-5xl font-bold mb-4 text-blue-400 drop-shadow-[2px_2px_var(--tw-shadow-color)] shadow-blue-950">
-              Celebrate Art
-            </h1>
-            <p className="text-lg md:text-lg mb-6">
-              Explore our curated collection of unique artworks
-            </p>
-            <div className="flex space-x-4">
-              <button
-                className="bg-blue-500 text-white px-6 py-2 rounded transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-                onClick={handleButtonClick}
-              >
-                Register Now
-              </button>
-              <button
-                className="bg-white text-blue-500 px-6 py-2 rounded border border-blue-500 transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50"
-                onClick={handleRegistration}
-              >
-                Join as an Artist
-              </button>
-            </div>
-          </div>
+  <div className="pl-6 md:pl-36 flex flex-col md:flex-row items-center min-h-[420px] max-h-[520px]">
+    <div className="text-content md:w-1/2 mb-8 md:mb-0">
+      {userName && (
+        <h2 className="text-xl md:text-2xl font-bold mb-4 text-blue-800">
+          Hi, <span>{userName}</span>! Welcome to Artify
+        </h2>
+      )}
+      <h1 className="text-2xl md:text-5xl font-bold mb-4 text-blue-400 drop-shadow-[2px_2px_var(--tw-shadow-color)] shadow-blue-950">
+        Discover, Collect, and
+      </h1>
+      <h1 className="text-2xl md:text-5xl font-bold mb-4 text-blue-400 drop-shadow-[2px_2px_var(--tw-shadow-color)] shadow-blue-950">
+        Celebrate Art
+      </h1>
+      <p className="text-base md:text-lg mb-6">
+        Explore our curated collection of unique artworks
+      </p>
+      <div className="flex space-x-4 mb-6">
+  <button
+    className="px-2 py-1 bg-blue-500 text-white md:px-6 md:py-2 rounded transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+    onClick={handleButtonClick}
+  >
+    Register Now
+  </button>
+  <button
+    className="px-2 py-1 bg-white text-blue-500 md:px-6 md:py-2 rounded border border-blue-500 transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50"
+    onClick={handleRegistration}
+  >
+    Join as an Artist
+  </button>
+</div>
 
-          <div className="image-content md:w-1/2">
-            <img
-              src="/images/HomePage.png"
-              alt="Artist painting"
-              className="w-full h-auto max-h-[400px] object-contain animate-float"
-            />
-          </div>
-        </div>
-      </div>
+    </div>
+
+    <div className="image-content w-full md:w-1/2">
+      <img 
+        src="/images/HomePage.png"
+        alt="Artist painting"
+        className="w-full h-auto max-h-[300px] md:max-h-[400px] object-contain animate-float mb-4"
+      />
+    </div>
+  </div>
+</div>
+
 
       {/* Custom Carousel Section */}
       <section className="bg-gray-50 relative overflow-hidden">
