@@ -40,6 +40,10 @@ app.use("/cart", cartRoutes);
 app.use("/artist", artistRoutes);
 app.use("/contact", contactRoutes);
 
+app.get("/",(req,res)=>{
+  res.json({message:"Good to go :-) Hello from backend"})
+})
+
 // Define the port from environment variables or use 5000 as a fallback
 const PORT = process.env.PORT || 5000;
 
