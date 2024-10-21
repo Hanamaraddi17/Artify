@@ -14,7 +14,7 @@ router.post(
   artworkController.uploadArtwork
 ); // Use multer here
 
-router.get("/", authMiddleware, artworkController.fetchArtworks);
+router.get("/",artworkController.fetchArtworks);
 
 // router.get("/:id", artworkController.fetchArtworkById);
 
