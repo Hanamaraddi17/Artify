@@ -87,21 +87,21 @@ exports.uploadArtwork = async (req, res) => {
 // =============================== Fetch all artworks ===========================
 
 // exports.fetchArtworks = (req, res) => {
-//   console.log("Received request to get all artworks");
-
-//   // SQL query to fetch all artworks along with the artist name
-//   const query = `
-//     SELECT artworks.*, artists.fullname AS artist_name
-//     FROM artworks
-//     JOIN artists ON artworks.artist_id = artists.artist_id
-//   `;
-
-//   db.query(query, (error, results) => {
-//     if (error) {
-//       console.error(
-//         "Error fetching artworks from the database:",
-//         error.message
-//       );
+  //   console.log("Received request to get all artworks");
+  
+  //   // SQL query to fetch all artworks along with the artist name
+  //   const query = `
+  //     SELECT artworks.*, artists.fullname AS artist_name
+  //     FROM artworks
+  //     JOIN artists ON artworks.artist_id = artists.artist_id
+  //   `;
+  
+  //   db.query(query, (error, results) => {
+    //     if (error) {
+      //       console.error(
+        //         "Error fetching artworks from the database:",
+        //         error.message
+        //       );
 //       return res.status(500).json({ error: error.message });
 //     }
 
@@ -111,23 +111,47 @@ exports.uploadArtwork = async (req, res) => {
 //   });
 // };
 
+// =============================== Fetch all artworks ===========================
+
 exports.fetchArtworks = (req, res) => {
-  const userId = req.user.id; // Assuming the user ID is available from authentication middleware
+  const userId = req.user ? req.user.id : null; // Check if the user is authenticated, otherwise set userId to null
 
   console.log("Received request to get all artworks");
 
-  // SQL query to fetch all artworks along with the artist name and like state for the user
-  const query = `
+  // Base SQL query to fetch all artworks along with the artist name
+  let query = `
     SELECT 
       artworks.*, 
-      artists.fullname AS artist_name,
-      CASE WHEN likes.user_id IS NOT NULL THEN 1 ELSE 0 END AS isLiked
-    FROM artworks
-    JOIN artists ON artworks.artist_id = artists.artist_id
-    LEFT JOIN likes ON artworks.artwork_id = likes.artwork_id AND likes.user_id = ?
+      artists.fullname AS artist_name
   `;
 
-  db.query(query, [userId], (error, results) => {
+  // If the user is authenticated, add the `isLiked` field
+  if (userId) {
+    query += `,
+      CASE WHEN likes.user_id IS NOT NULL THEN 1 ELSE 0 END AS isLiked
+    `;
+  } else {
+    // If not authenticated, set isLiked to 0 (false)
+    query += `,
+      0 AS isLiked
+    `;
+  }
+
+  // Complete the query with the necessary joins
+  query += `
+    FROM artworks
+    JOIN artists ON artworks.artist_id = artists.artist_id
+  `;
+
+  // Only join the likes table if the user is authenticated
+  if (userId) {
+    query += `
+      LEFT JOIN likes ON artworks.artwork_id = likes.artwork_id AND likes.user_id = ?
+    `;
+  }
+
+  // Execute the query with or without the user ID
+  db.query(query, userId ? [userId] : [], (error, results) => {
     if (error) {
       console.error(
         "Error fetching artworks from the database:",
