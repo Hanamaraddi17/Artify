@@ -77,9 +77,9 @@ export default function ArtistRegistrationPage() {
     const token = sessionStorage.getItem("authToken");
 
     try {
-      const response = await fetch("http://localhost:5000/artist/join", {
+      const response = await fetch("https://artifybackend.vercel.app/artist/join", {
         method: "POST",
-        headers: {
+        headers: { 
           Authorization: `Bearer ${token}`, // Correctly set the Authorization header
         },
         body: data,
