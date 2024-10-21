@@ -14,7 +14,7 @@ const ArtistsTablePage = () => {
   useEffect(() => {
     const fetchArtists = async () => {
       try {
-        const response = await fetch("http://localhost:5000/artist/");
+        const response = await fetch("https://artifybackend.vercel.app/artist/");
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }

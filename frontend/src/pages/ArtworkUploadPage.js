@@ -53,7 +53,7 @@ export default function ArtworkUploadPage() {
     const token = sessionStorage.getItem("authToken");
 
     try {
-      const response = await fetch("http://localhost:5000/artworks/upload", {
+      const response = await fetch("https://artifybackend.vercel.app/artworks/upload", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

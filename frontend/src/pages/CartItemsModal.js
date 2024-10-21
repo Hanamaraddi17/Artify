@@ -10,7 +10,7 @@ const CartModal = () => {
   const fetchCartItems = async () => {
     try {
       const token = sessionStorage.getItem("authToken");
-      const response = await fetch("http://localhost:5000/cart", {
+      const response = await fetch("https://artifybackend.vercel.app/cart", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -37,7 +37,7 @@ const CartModal = () => {
     try {
       const token = sessionStorage.getItem("authToken");
       const response = await fetch(
-        `http://localhost:5000/cart/remove/${artworkId}`,
+        `https://artifybackend.vercel.app/cart/remove/${artworkId}`,
         {
           method: "DELETE",
           headers: {
@@ -65,7 +65,7 @@ const CartModal = () => {
 
   const getFormattedImageUrl = (imageUrl) => {
     return imageUrl
-      ? `http://localhost:5000/${imageUrl.replace(/\\/g, "/")}`
+      ? `https://artifybackend.vercel.app/${imageUrl.replace(/\\/g, "/")}`
       : "/images/default.jpeg";
   };
 

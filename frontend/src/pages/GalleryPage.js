@@ -51,7 +51,7 @@ const GalleryPage = () => {
 
   const fetchArtworks = async () => {
     try {
-      const response = await fetch("http://localhost:5000/artworks/", {
+      const response = await fetch("https://artifybackend.vercel.app/artworks/", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -85,7 +85,7 @@ const GalleryPage = () => {
     if (!token) return;
     try {
       const response = await fetch(
-        "http://localhost:5000/artist/check/artist",
+        "https://artifybackend.vercel.app/artist/check/artist",
         {
           method: "GET",
           headers: {

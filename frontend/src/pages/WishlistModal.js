@@ -8,7 +8,7 @@ const WishlistModal = () => {
     try {
       const token = sessionStorage.getItem("authToken"); // Retrieve the token from local storage
       const response = await fetch(
-        "http://localhost:5000/artworks/liked-items",
+        "https://artifybackend.vercel.app/artworks/liked-items",
         {
           method: "GET",
           headers: {
@@ -42,7 +42,7 @@ const WishlistModal = () => {
     try {
       const token = sessionStorage.getItem("authToken"); // Retrieve the token from local storage
       const response = await fetch(
-        `http://localhost:5000/artworks/${artworkId}/like`, // Assuming the same endpoint can handle unliking
+        `https://artifybackend.vercel.app/artworks/${artworkId}/like`, // Assuming the same endpoint can handle unliking
         {
           method: "PATCH",
           headers: {
@@ -74,7 +74,7 @@ const WishlistModal = () => {
   // Function to format the image URL
   const getFormattedImageUrl = (imageUrl) => {
     return imageUrl
-      ? `http://localhost:5000/${imageUrl.replace(/\\/g, "/")}` // Replace backslashes with forward slashes
+      ? `https://artifybackend.vercel.app/${imageUrl.replace(/\\/g, "/")}` // Replace backslashes with forward slashes
       : "/images/default.jpeg"; // Provide a default image if photo is null
   };
   // fixed right-0 top-1/2 transform -translate-y-1/2 w-96 max-h-96 bg-white shadow-lg p-4 overflow-y-auto z-50 rounded-lg

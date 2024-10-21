@@ -27,7 +27,7 @@ const PersonalInfoModal = () => {
       // Fetch isArtist status from API
       try {
         const response = await fetch(
-          "http://localhost:5000/artist/check/artist",
+          "https://artifybackend.vercel.app/artist/check/artist",
           {
             method: "GET",
             headers: {
@@ -72,7 +72,7 @@ const PersonalInfoModal = () => {
     if (!confirmDelete) return;
 
     try {
-      const response = await fetch(`http://localhost:5000/auth/delete`, {
+      const response = await fetch(`https://artifybackend.vercel.app/auth/delete`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,

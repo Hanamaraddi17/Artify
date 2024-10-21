@@ -37,7 +37,7 @@ function HomePage() {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/artist/check/artist",
+        "https://artifybackend.vercel.app/artist/check/artist",
         {
           method: "GET",
           headers: {

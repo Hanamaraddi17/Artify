@@ -14,7 +14,7 @@ const ArtworkCards = ({
 }) => {
   // Correct the image URL format
   const formattedImageUrl = imageUrl
-    ? `http://localhost:5000/${imageUrl.replace(/\\/g, "/")}` // Replace backslashes with forward slashes
+    ? `https://artifybackend.vercel.app/${imageUrl.replace(/\\/g, "/")}` // Replace backslashes with forward slashes
     : "/images/default.jpeg"; // Provide a default image if photo is null
 
   const token = sessionStorage.getItem("authToken");
@@ -25,7 +25,7 @@ const ArtworkCards = ({
   const handleLikeArtwork = async (artworkId) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/artworks/${artworkId}/like`,
+        `https://artifybackend.vercel.app/artworks/${artworkId}/like`,
         {
           method: "PATCH",
           headers: {
@@ -51,7 +51,7 @@ const ArtworkCards = ({
   // Function to handle order placement
   const handlePlaceOrder = async () => {
     try {
-      const response = await fetch("http://localhost:5000/orders/place", {
+      const response = await fetch("https://artifybackend.vercel.app/orders/place", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -78,7 +78,7 @@ const ArtworkCards = ({
 
   const handleAddToCart = async () => {
     try {
-      const response = await fetch("http://localhost:5000/cart/add", {
+      const response = await fetch("https://artifybackend.vercel.app/cart/add", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

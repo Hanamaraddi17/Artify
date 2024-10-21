@@ -20,7 +20,7 @@ const ArtistInfoPage = () => {
   useEffect(() => {
     const fetchArtist = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/artist/${id}`);
+        const response = await fetch(`https://artifybackend.vercel.app/artist/${id}`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -33,7 +33,7 @@ const ArtistInfoPage = () => {
           address: data.address,
           phoneNo: data.phone,
           photo: data.photo
-            ? `http://localhost:5000/${data.photo.replace(/\\/g, "/")}`
+            ? `https://artifybackend.vercel.app/${data.photo.replace(/\\/g, "/")}`
             : "/images/default.jpeg", // Provide a default image if photo is null
           biography: data.biography || "No biography available.",
           artworks: data.artworks || [], // Assuming artworks are provided
@@ -133,7 +133,7 @@ const ArtistInfoPage = () => {
                   key={artwork.artwork_id} // Changed to artwork.artwork_id
                   className="bg-gradient-to-br from-indigo-200 to-purple-200 h-40 rounded-lg transition-all duration-300 ease-in-out hover:shadow-md hover:scale-105"
                   style={{
-                    backgroundImage: `url(http://localhost:5000/${artwork.image_url.replace(
+                    backgroundImage: `url(https://artifybackend.vercel.app/${artwork.image_url.replace(
                       /\\/g,
                       "/"
                     )})`, // Changed to artwork.image_url

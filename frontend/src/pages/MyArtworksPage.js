@@ -27,7 +27,7 @@ const MyArtworksPage = () => {
 
   const fetchArtistArtworks = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/artist/myartworks`, {
+      const response = await fetch(`https://artifybackend.vercel.app/artist/myartworks`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -56,7 +56,7 @@ const MyArtworksPage = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/artworks/delete/${artworkId}`,
+        `https://artifybackend.vercel.app/artworks/delete/${artworkId}`,
         {
           method: "DELETE",
           headers: {
@@ -83,7 +83,7 @@ const MyArtworksPage = () => {
     const shareData = {
       title,
       text: `Check out this artwork: ${title}`,
-      url: `http://localhost:5000/${url.replace(/\\/g, "/")}`,
+      url: `https://artifybackend.vercel.app/${url.replace(/\\/g, "/")}`,
     };
 
     if (navigator.share) {
@@ -120,7 +120,7 @@ const MyArtworksPage = () => {
           <div className="bg-white p-6 rounded-3xl shadow-2xl mb-8 w-3/4 transform hover:scale-105 transition-transform duration-500 ">
             <img
               className="w-40 h-40 object-cover rounded-full mx-auto border-4 border-indigo-500"
-              src={`http://localhost:5000/${artistDetails.photo.replace(
+              src={`https://artifybackend.vercel.app/${artistDetails.photo.replace(
                 /\\/g,
                 "/"
               )}`}
@@ -176,7 +176,7 @@ const MyArtworksPage = () => {
               {/* Artwork Image */}
               <img
                 className="w-full h-64 object-cover"
-                src={`http://localhost:5000/${artwork.image_url.replace(
+                src={`https://artifybackend.vercel.app/${artwork.image_url.replace(
                   /\\/g,
                   "/"
                 )}`}
